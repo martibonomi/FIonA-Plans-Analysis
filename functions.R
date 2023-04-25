@@ -11,6 +11,7 @@ library(tidyverse)
 library(ggplot2)
 library(dplyr)
 library(reconPlots)
+library(covr)
 
 readDVHs <- function(dvhs.csv, rename.structures = FALSE, structures.names = NA){
   
@@ -29,11 +30,10 @@ readDVHs <- function(dvhs.csv, rename.structures = FALSE, structures.names = NA)
   dvhs <- read.csv(dvhs.csv)
   colnames(dvhs)[1] <- "Dose"
   
-  # renaming structure names
   if(rename.structures == TRUE){
     for (structure in structures.names) {
       curr.structure.idx <- which(str_detect(colnames(dvhs), regex(structure, ignore_case = TRUE)))
-      colnames(dvh)[curr.structure.idx] <- structure
+      colnames(dvhs)[curr.structure.idx] <- structure
     }
   }
   
@@ -41,10 +41,9 @@ readDVHs <- function(dvhs.csv, rename.structures = FALSE, structures.names = NA)
   vol.cc <- tail(dvhs, n = 1)
   vol.cc <- vol.cc[2:length(dvhs)]
   
+  # keep only dvhs dataframe
   dvhs <- dvhs[1:nrow(dvhs)-1,]
-  
-  # convert dose to num (from chr)
-  dvh$Dose <- as.numeric(dvh$Dose)
+  dvhs$Dose <- as.numeric(dvhs$Dose) # convert dose to num (from chr)
   
   plan <- list(dvhs, vol.cc)
   names(plan) <- c("DVHs", "Volumes [cc]")
@@ -52,3 +51,22 @@ readDVHs <- function(dvhs.csv, rename.structures = FALSE, structures.names = NA)
   return(plan)
   
 }
+
+
+selectDVHsStructures <- function(plan, keep.structures){
+  
+  # ---------------------------------------------------------------------------------------------
+  # Function's description:
+  # It selects only the DVHs for the selected structures from the plan
+  # ---------------------------------------------------------------------------------------------
+  # Parameters:
+  # plan [list] <- plan output from the "readDVHs" function
+  # keep.dvhs [chr] -> vector with only structures you want to keep 
+  # ---------------------------------------------------------------------------------------------
+  
+  plan[["DVHs"]] <- plan[["DVHs"]][, c("Dose", keep.structures)]
+  plan[["Volumes [cc]"]] <- plan[["Volumes [cc]"]][, keep.structures]
+  
+  return(plan)
+}
+
