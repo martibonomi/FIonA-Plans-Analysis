@@ -1,6 +1,7 @@
 # -------------------------------------------------------------------------------------
 # Author: Martina Bonomi
 # Date: May 2023
+# Rscript : tests definition
 #
 # Name of the project: Visualization and analysis of "FIonA"'s proton treatment plans
 # Aim of the project: to process and visualize proton treatment plans
@@ -13,17 +14,18 @@ library(ggplot2)
 library(dplyr)
 library(reconPlots)
 library(covr)
+library(assertthat)
 
 # test data
-dvhs_grid.csv <- "data/dvhs_grid.csv"
-robustness_grid.csv <- "data/robustness_grid.csv"
-dvhs_air.csv <- "data/dvhs_air.csv"
-robustness_air.csv <- "data/robustness_air.csv"
-dvhs_water.csv <- "data/dvhs_water.csv"
-robustness_water.csv <- "data/robustness_water.csv"
+dvhs_grid.csv <- "test_data/dvhs_grid.csv"
+robustness_grid.csv <- "test_data/robustness_grid.csv"
+dvhs_air.csv <- "test_data/dvhs_air.csv"
+robustness_air.csv <- "test_data/robustness_air.csv"
+dvhs_water.csv <- "test_data/dvhs_water.csv"
+robustness_water.csv <- "test_data/robustness_water.csv"
 
 # structures
-structures.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs", "SpinalCord")
+renamed.structures <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs", "SpinalCord")
 keep.structures <- c("PTV", "CTV", "Lungs", "Esophagus")
 
 
@@ -38,19 +40,18 @@ test_readDVHs <- function(){
   #   and a dataframe with structures' volumes
   # ---------------------------------------------------------------------------------------------
   
-  plan <- readDVHs(dvhs_grid.csv, rename.structures = TRUE, structures.names)
+  # test with default options
+  plan <- readDVHs(dvhs_grid.csv, rename.structures = FALSE)
+  assert_that(length(plan) == 2)
+  assert_that(length(plan$DVHs) == 7 + 1) # number of structures + dose
+  assert_that(length(plan$"Volumes [cc]") == 7)
   
-  # assert that "DVHs" is a dataframe with "double" values
-  stopifnot(is.data.frame(plan[["DVHs"]]) == TRUE)
-  
-  stopifnot(length(plan) == 2)
-  
-  for(col in 1:length(plan[["DVHs"]])){
-    stopifnot(is.double(plan[["DVHs"]][,col]) == TRUE)
-  }
-  
-  # assert that "Volumes [cc]" is a dataframe
-  stopifnot(is.data.frame(plan[["Volumes [cc]"]]) == TRUE)
+  # test with renamed structures
+  plan <- readDVHs(dvhs_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  assert_that(length(plan) == 2)
+  assert_that(length(plan$DVHs) == 7 + 1)
+  assert_that(length(plan$"Volumes [cc]") == 7)
+  assert_that(all(colnames(plan$DVHs)[-1] == renamed.structures)) # removing Dose column
   
 }
 
@@ -65,11 +66,11 @@ test_selectDVHsStructures <- function(){
   # THEN: the function returns a plan with only the DVHs and volumes of the selected structures 
   # ---------------------------------------------------------------------------------------------
   
-  plan <- readDVHs(dvhs_grid.csv, rename.structures = TRUE, structures.names)
-  new.plan <- selectDVHsStructures(plan, keep.structures)
+  plan <- readDVHs(dvhs_grid.csv, rename.structures = TRUE, renamed.structures)
+  filtered.plan <- selectDVHsStructures(plan, keep.structures)
   
-  stopifnot(colnames(new.plan[["DVHs"]])[-1] %in% keep.structures)
-  stopifnot(colnames(new.plan[["Volumes [cc]"]]) %in% keep.structures)
+  assert_that(all(colnames(filtered.plan[["DVHs"]])[-1] %in% keep.structures))
+  assert_that(all(colnames(filtered.plan[["Volumes [cc]"]]) %in% keep.structures))
   
 }
 

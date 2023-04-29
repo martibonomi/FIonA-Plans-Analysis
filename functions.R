@@ -13,6 +13,7 @@ library(ggplot2)
 library(dplyr)
 library(reconPlots)
 library(covr)
+library(assertthat)
 
 readDVHs <- function(dvhs.csv, rename.structures = FALSE, structures.names = NA){
   
@@ -187,3 +188,5 @@ plotComparePlansDVHs <- function(plans, title = TRUE){
   return(plot)
   
 }
+
+
