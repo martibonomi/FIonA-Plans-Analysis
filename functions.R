@@ -190,3 +190,77 @@ plotComparePlansDVHs <- function(plans, title = TRUE){
 }
 
 
+readRobustness <- function(robustness.csv, rename.structures = FALSE, structures.names = NA){
+  
+  # ---------------------------------------------------------------------------------------------
+  # Function's description:
+  # Reads FIonA's output from robustness calculation and re-enumerates the curves of each  
+  #   shift scenario for each structure (curve "_5" is the nominal one)
+  # ---------------------------------------------------------------------------------------------
+  # Parameters:
+  # robustness.csv -> .csv fie output from FIonA from robustness calculation
+  # rename.structures [logical] -> TRUE if you want to change the structures names from FIonA,
+  #   FALSE if you want to keep FIonA's names
+  # structures.names [chr] -> vector with new structures names, only if rename.structures = TRUE
+  # ---------------------------------------------------------------------------------------------
+  
+  robustness <- read.csv(robustness.csv)
+  colnames(robustness)[1] <- "Dose"
+  
+  if(rename.structures == TRUE){
+    
+    for(i in 1:length(structures.names)){
+      curr.idxs <- which(str_detect(colnames(robustness), regex(structures.names[i], ignore_case = TRUE)))
+      for(j in 1:length(curr.idxs)){
+        colnames(robustness)[curr.idxs[j]] <- paste(structures.names[i], j, sep = "_")
+      }
+    }
+    
+  } else {
+    
+    # get unique original names for structures
+    orig.structures.names <- colnames(robustness)[-1]
+    list.structures.names <- str_split(orig.structures.names, pattern = "[.]")
+    structures.names <- c()
+    for(i in 1:length(list.structures.names)){
+      structures.names[i] <- list.structures.names[[i]][1]
+    }
+    structures.names <- unique(structures.names)
+    
+    for(i in 1:length(structures.names)){
+      curr.idxs <- which(str_detect(colnames(robustness), structures.names[i]))
+      for(j in 1:length(curr.idxs)){
+        colnames(robustness)[curr.idxs[j]] <- paste(structures.names[i], j, sep = "_")
+      }
+    }
+    
+  }
+  
+  robustness[is.na(robustness)] <- 0
+  
+  return(robustness)
+  
+}
+
+
+selectRobustnessStructures <- function(robustness, keep.structures){
+  
+  # ---------------------------------------------------------------------------------------------
+  # Function's description:
+  # It selects only the robustness shifts for the selected structures from the robustness 
+  #   calculation
+  # ---------------------------------------------------------------------------------------------
+  # Parameters:
+  # robustness <- robustness dataframe output from "readRobustness" function
+  # keep.structures [chr] -> vector with only structures you want to keep 
+  # ---------------------------------------------------------------------------------------------
+  
+  for(str in keep.structures){
+    keep.idxs <- c(1, which(str_detect(colnames(robustness), str))) # idx 1 is for Dose
+  }
+  
+  robustness <- robustness[, keep.idxs]
+  
+  return(robustness)
+  
+}
