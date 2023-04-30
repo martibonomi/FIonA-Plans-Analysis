@@ -97,14 +97,16 @@ plotDVHs <- function(plan, plan.name, title = TRUE){
     plan.dvhs$DVH_curves <- factor(plan.dvhs$DVH_curves, levels = c("CTV", "PTV", sort(unique(plan.dvhs$DVH_curves)[-c(ptv.idx, ctv.idx)])))
   }
   
+  # create plot
   plot <- ggplot(plan.dvhs, aes(x = Dose, y = value)) +
     geom_line(data = plan.dvhs, aes(color = DVH_curves), linewidth = 0.8) +
     ylim(0,110) +
     xlab("Dose [%]") +
     ylab("Volume [%]") +
-    labs(colour = "DVH curves") + 
+    labs(colour = "DVHs") + 
     theme(text = element_text(size = 15))
   
+  # add title
   if(title == TRUE){
     plot <- plot + ggtitle(paste("DVHs for plan", plan.name, sep = " "))
   } else if(title == FALSE){
@@ -264,3 +266,164 @@ selectRobustnessStructures <- function(robustness, keep.structures){
   return(robustness)
   
 }
+
+
+plotRobustness <- function(robustness, robustness.name, title = TRUE){
+  
+  # ---------------------------------------------------------------------------------------------
+  # Function's description:
+  # Reads a robustness file output from the "readRobustness" function and plots curves for 
+  #   geometrical shifts for each curve
+  # ---------------------------------------------------------------------------------------------
+  # Parameters:
+  # robustness -> robustness dataframe for which you want to plot the DVHs, output of 
+  #   "readRobustness" (all structures plotted) or output of "selectDVHsStructures"
+  #   (only selected structures are plotted)
+  # robustness.name [chr] <- name of the plan for which you calculated the robustness
+  # title [chr or logical] -> title for the plot, either TRUE, FALSE or character
+  # ---------------------------------------------------------------------------------------------
+  
+  robustness  <- robustness  %>%
+    gather(key = "DVH_curves", value = "value", -Dose)
+  
+  # add unique structures column
+  robustness$Structure <- NA
+  structures.names <- c()
+  curves.names <- robustness$DVH_curves
+  for(i in 1:length(curves.names)){
+    robustness$Structure[i] <- str_split(curves.names[i], pattern = "_")[[1]][1]
+  }
+  
+  # set DVHs' names as factors to plot them in a given order (CTV and PTV first, then organs at risk)
+  if("PTV" %in% unique(robustness$Structure) & "CTV" %in% unique(robustness$Structure)){
+    ptv.idx <- which(unique(robustness$Structure) == "PTV")
+    ctv.idx <- which(unique(robustness$Structure) == "CTV")
+    robustness$Structure <- factor(robustness$Structure, levels = c("CTV", "PTV", sort(unique(robustness$Structure)[-c(ptv.idx, ctv.idx)])))
+  }
+  
+  # create plot
+  plot <- ggplot(robustness, aes(x = Dose, y = value, group = DVH_curves)) +
+    geom_line(data = robustness, aes(group = DVH_curves, color = Structure), linewidth = 0.6) +
+    ylim(0,110) +
+    xlab("Dose [%]") +
+    ylab("Volume [%]") +
+    labs(colour = "Robustness DVHs")
+  
+  # add title
+  if(title == TRUE){
+    plot <- plot + ggtitle(paste("Robustness DVHs for plan", robustness.name, sep = " "))
+  } else if(title == FALSE){
+    plot <- plot
+  } else{
+    plot <- plot + ggtitle(title)
+  }
+  
+  return(plot)
+  
+}
+
+
+findRobustnessSpread <- function(robustness){
+  
+  # ---------------------------------------------------------------------------------------------
+  # Function's description:
+  # Reads a robustness file output from the "readRobustness" function and finds best and worst
+  #   case scenario of geometrical shifts
+  # ---------------------------------------------------------------------------------------------
+  # Parameters:
+  # robustness -> robustness dataframe for which you want to plot the DVHs, output of 
+  #   "readRobustness" (all structures plotted) or output of "selectRobustnessStructures"
+  #   (only selected structures are plotted)
+  # ---------------------------------------------------------------------------------------------
+  
+  spread.df <- data.frame(Dose = robustness$Dose)
+  
+  structure.names <- unique(gsub("_[0-9]+$", "", names(robustness)[-1]))
+  
+  # find max and min for each point of each structure
+  for (str in structure.names) {
+    col.indices <- grepl(paste0(str, "_"), names(robustness))
+    curr.str.df <- data.frame(
+      nom = robustness[, col.indices & grepl("_5", names(robustness))],
+      max = apply(robustness[, col.indices], 1, max),
+      min = apply(robustness[, col.indices], 1, min)
+    )
+    colnames(curr.str.df) <- paste0(str, "_", colnames(curr.str.df))
+    
+    spread.df <- cbind(spread.df, curr.str.df)
+  }
+  
+  return(spread.df)
+  
+}
+
+
+plotRobustnessSpread <- function(robustness, robustness.name, title = TRUE){
+  
+  # ---------------------------------------------------------------------------------------------
+  # Function's description:
+  # Reads a robustness dataframe output from the "readRobustness" function and plots curves for
+  # the worst and best case scenarios of geometrical shifts for each curve
+  # ---------------------------------------------------------------------------------------------
+  # Parameters:
+  # robustness -> robustness dataframe for which you want to plot the spread, output 
+  #   of "readRobustness" (all structures plotted) or output of "selectDVHsStructures"
+  #   (only selected structures are plotted)
+  # robustness.name [chr] <- name of the plan for which you calculated the robustness spread
+  # title [chr or logical] -> title for the plot, either TRUE, FALSE or character
+  # ---------------------------------------------------------------------------------------------
+  
+  # find robustness spread
+  robustness.spread <- findRobustnessSpread(robustness)
+  
+  robustness.spread <- robustness.spread %>%
+    gather(key = "DVH_curves", value = "value", -Dose)
+  
+  # add structures to dataframe 
+  structures.names <- unique(gsub("_(nom|min|max)+$", "", robustness.spread$DVH_curves))
+  robustness.spread$Structure <- NA
+  for(str in structures.names){
+    robustness.spread$Structure[which(str_detect(robustness.spread$DVH_curves, str))] <- str
+  }
+  
+  # set DVHs' names as factors to plot them in a given order (CTV and PTV first, then organs at risk)
+  if("PTV" %in% unique(robustness.spread$Structure) & "CTV" %in% unique(robustness.spread$Structure)){
+    ptv.idx <- which(unique(robustness.spread$Structure) == "PTV")
+    ctv.idx <- which(unique(robustness.spread$Structure) == "CTV")
+    robustness.spread$Structure <- factor(robustness.spread$Structure, levels = c("CTV", "PTV", sort(unique(robustness.spread$Structure)[-c(ptv.idx, ctv.idx)])))
+  }
+  
+  # add curves' types to dataframe 
+  curve.type <- c("nom", "max", "min")
+  robustness.spread$Curve <- NA
+  for(typ in curve.type){
+    robustness.spread$Curve[which(str_detect(robustness.spread$DVH_curves, typ))] <- typ
+  }
+  
+  robustness.spread$Curve <- gsub("max", "Best case scenario", robustness.spread$Curve)
+  robustness.spread$Curve <- gsub("min", "Worst case scenario", robustness.spread$Curve)
+  robustness.spread$Curve <- gsub("nom", "Nominal curve", robustness.spread$Curve)
+  
+  robustness.spread$Curve <- factor(robustness.spread$Curve, levels = c("Nominal curve", "Best case scenario", "Worst case scenario"))
+  
+  # create plot
+  plot <- ggplot(robustness.spread, aes(x = Dose, y = value, group = DVH_curves)) +
+    geom_line(data = robustness.spread, aes(group = DVH_curves, color = Structure, linetype = Curve), linewidth = 0.6) +
+    ylim(0,110) +
+    xlab("Dose [%]") +
+    ylab("Volume [%]") +
+    labs(colour = "Structures", linetype = "Curve type")
+  
+  # add title
+  if(title == TRUE){
+    plot <- plot + ggtitle(paste("Robustness spread for plan", robustness.name, sep = " "))
+  } else if(title == FALSE){
+    plot <- plot
+  } else{
+    plot <- plot + ggtitle(title)
+  }
+  
+  return(plot)
+  
+}
+
