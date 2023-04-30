@@ -195,17 +195,15 @@ test_getStructureRobustness <- function(){
   #   for the worst case scenario of the selected structure
   # ---------------------------------------------------------------------------------------------
   
-  robustness <- readRobustness(robustness_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  
   # expected value
   structure <- "CTV"
   dose = 95
-  expected.Vd <- 92.755
+  expected.rob <- 92.755
   
-  # calculated value
-  robustness.Vd <- getStructureRobustness(robustness, dose, structure)
+  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  actual.rob <- getStructureRobustness(robustness, dose, structure)
   
-  expect_true(robustness.Vd == expected.Vd)
+  expect_equal(actual.rob, expected.rob)
   
 }
 
@@ -223,10 +221,10 @@ test_getEnergies <- function(){
   # ---------------------------------------------------------------------------------------------
   
   energies <- getEnergies(energies.csv = energies.csv)
-    
+  
   expect_true(typeof(energies) == "list")
-  expect_true(length(energies) == 4)
-  expect_true(all(names(energies) == c("Total energies", "F0", "F1", "F2")))
+  expect_equal(length(energies), 4)
+  expect_equal(names(energies), c("Total energies", "F0", "F1", "F2"))
   
 }
 
