@@ -15,6 +15,7 @@ library(dplyr)
 library(reconPlots)
 library(covr)
 library(assertthat)
+library(testthat)
 
 # test data
 dvhs_grid.csv <- "test_data/dvhs_grid.csv"
@@ -114,7 +115,7 @@ test_readRobustness <- function(){
 }
 
 
-test_selectRobustnessStructures() <- function(){
+test_selectRobustnessStructures <- function(){
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function keeps only the robustness DVHs of the selected structures
@@ -133,3 +134,64 @@ test_selectRobustnessStructures() <- function(){
   assert_that(all(colnames(filtered.robustness)[-1] %in% structures.to.keep.curves))
   
 }
+
+
+test_findRobustnessSpread() <- function(){
+  # to be done
+}
+
+
+test_getVd <- function(){
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns the correct value for V[d%] for the selected 
+  #   structure
+  #
+  # GIVEN: a list of dvhs of the wanted plan (output of "readPlan"), a value "d" for the dose 
+  #   the structure name for which you want to compute V[d%]
+  # WHEN: I apply "getVd" function
+  # THEN: the function returns the correct value of V[d%] for the selected structure
+  # ---------------------------------------------------------------------------------------------
+  
+  plan <- readDVHs(dvhs.csv = dvhs_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
+
+  # calculate V95 for CTV
+  structure <- "CTV"
+  d = 95
+  expected.Vd = 97.238
+  
+  Vd <- getVd(plan, d, structure) 
+  
+  # check that V[d%] value is correct
+  assert_that(Vd == expected.Vd)
+  
+}
+
+
+test_getDv <- function() {
+
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns the correct value for D[v%] for the selected 
+  #   structure
+  #
+  # GIVEN: a list of dvhs of the wanted plan (output of "readPlan"), a value "v" for the dose 
+  #   the structure name for which you want to compute D[v%]
+  # WHEN: I apply "getDv" function
+  # THEN: the function returns the correct value of D[v%] for the selected structure
+  # ---------------------------------------------------------------------------------------------
+  
+  plan <- readDVHs(dvhs.csv = dvhs_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
+
+  # calculate V95 for CTV
+  structure <- "CTV"
+  v = 2.025
+  expected.Dv = 105.9
+  
+  Dv <- getDv(plan, v, structure)
+  
+  # check that D[v%] value is correct within a certain tolerance interval
+  tolerance <- 1e-6
+  assert_that(abs(Dv - expected.Dv) < tolerance)
+  
+}
+

@@ -427,3 +427,67 @@ plotRobustnessSpread <- function(robustness, robustness.name, title = TRUE){
   
 }
 
+
+getVd <- function(dvhs, d, structure){
+  
+  # ---------------------------------------------------------------------------------------------
+  # Function's description:
+  # It finds the V[d%] value for the selected structure of the current plan you are using
+  # ---------------------------------------------------------------------------------------------
+  # Parameters:
+  # dvhs -> dvhs list of the plan for which you want to calculate V[d%], output of "readPlan" 
+  #   function
+  # d [num] <- dose percentage for which you want to compute the volume, numeric value
+  # structure [chr] -> structure for which you want to compute V[d%] 
+  # ---------------------------------------------------------------------------------------------
+  
+  structures <- colnames(dvhs[["DVHs"]][-1])
+  
+  str.idx <- which(str_detect(structures, structure))
+  selected.structure <- dvhs[["DVHs"]][, str.idx + 1]
+  
+  dose.idx <- which(dvhs[["DVHs"]]$Dose == d)
+  
+  Vd <- selected.structure[dose.idx]
+  
+  return(Vd)
+  
+}
+
+
+getDv <- function(dvhs, v, structure){
+  
+  # ---------------------------------------------------------------------------------------------
+  # Function's description:
+  # It finds the D[v%] value for the selected structure
+  # ---------------------------------------------------------------------------------------------
+  # Parameters:
+  # dvhs -> dvhs list of the plan for which you want to calculate D[v%], output of "readPlan" 
+  #   function
+  # v [num] <- volume percentage for which you want to compute the dose, numeric value
+  # structure [chr] -> structure for which you want to compute D[v%]
+  # ---------------------------------------------------------------------------------------------
+  
+  # get names of structures in the plan file
+  structures <- colnames(dvhs[["DVHs"]][-1])
+  
+  # get column idx for wanted structure
+  str.idx <- which(str_detect(structures, structure))
+  
+  # get structure volume and dose values
+  dose <- dvhs[["DVHs"]]$Dose
+  vol = as.vector(dvhs[["DVHs"]][str.idx + 1])[[1]]
+  
+  vol <- approxfun(dose, vol)
+  
+  # find intersection with v value
+  Dv <- uniroot(function(dose) fun(dose) - v, c(min(dose), max(dose)))$root
+  
+  return(Dv)
+  
+}
+
+
+
+
+
