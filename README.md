@@ -16,12 +16,16 @@ The functions implemented for the analysis and visualization of plans are specif
 
 ## Installation
 
-To use the functions in this repository, it will be necessary to install the required packages. To do so, clone the git repository and then run the following command in R:
+To clone the git repository, type the following commands from terminal:
 
 ```         
 git clone https://github.com/martibonomi/FIonA-Plans-Analysis
 cd FIonA-Plans-Analysis
+```
 
+To run the functions used for plans' analysis and visualization, it is necessary to install some required packages. To do that, type the following command from terminal inside the R environment:
+
+```
 R
 source("install_packages.R")
 ```
