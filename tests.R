@@ -8,15 +8,7 @@
 #     outcome from "FIonA" treatment planning system
 # --------------------------------------------------------------------------------------
 
-# Load required libraries
-library(tidyverse)
-library(ggplot2)
-library(dplyr)
-library(reconPlots)
-library(covr)
-library(assertthat)
-library(testthat)
-
+# uplaod functions to test
 source("functions.R")
 
 # test data
@@ -36,18 +28,20 @@ test_readDVHs <- function(){
   #
   # GIVEN: a .csv file output from FIonA treatment planning system
   # WHEN: I apply readDVHs function
-  # THEN: the function returns a list with two objects: a dataframe with DVHs values (double) 
+  # THEN: the function returns a list with two objects: a dataframe with structures' DVHs 
   #   and a dataframe with structures' volumes
   # ---------------------------------------------------------------------------------------------
   
   # test with default options
-  plan <- readDVHs(dvhs_grid.csv, rename.structures = FALSE)
-  expect_true(length(plan) == 2)
-  expect_true(length(plan$DVHs) == 7 + 1) # number of structures + dose
-  expect_true(length(plan$"Volumes [cc]") == 7)
+  plan <- readDVHs(dvhs.csv, rename.structures = FALSE)
   
+  expect_equal(length(plan), 2)
+  expect_equal(length(plan$DVHs), 7 + 1) # number of structures + dose
+  expect_equal(length(plan$"Volumes [cc]"), 7)
+
   # test with renamed structures
   plan <- readDVHs(dvhs_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  
   expect_true(length(plan) == 2)
   expect_true(length(plan$DVHs) == 7 + 1) # number of structures + dose
   expect_true(length(plan$"Volumes [cc]") == 7)
@@ -66,11 +60,11 @@ test_selectDVHsStructures <- function(){
   # THEN: the function returns a plan with only the DVHs and volumes of the selected structures 
   # ---------------------------------------------------------------------------------------------
   
-  plan <- readDVHs(dvhs_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  plan <- readDVHs(dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
   filtered.plan <- selectDVHsStructures(plan, keep.structures = structures.to.keep)
   
-  expect_true(all(colnames(filtered.plan[["DVHs"]])[-1] %in% structures.to.keep))
-  expect_true(all(colnames(filtered.plan[["Volumes [cc]"]]) %in% structures.to.keep))
+  expect_equal(colnames(filtered.plan[["DVHs"]])[-1], structures.to.keep)
+  expect_equal(colnames(filtered.plan[["Volumes [cc]"]]), structures.to.keep)
   
 }
 
@@ -88,28 +82,24 @@ test_readRobustness <- function(){
   # ---------------------------------------------------------------------------------------------
   
   # test with default options
-  robustness <- readRobustness(robustness_grid.csv, rename.structures = FALSE)
+  robustness <- readRobustness(robustness.csv, rename.structures = FALSE)
   
-  original.csv <- read.csv(robustness_grid.csv)
-  original.colnames <- unique(colnames(original.csv))[-1] # get unmodified structures names
-  for (idx in 1:length(original.colnames)) {
-    original.colnames[idx] <- str_split_1(original.colnames[idx], pattern = "[.]")[1]
-  }
-  
-  expected.colnames <- paste0(original.colnames, "_", 1:9)
+  structures.names <- c("DIBH_CTV_bridge", "DIBH_Esophagus", "DIBH_Medulla", "PRV_SpinalCord", "DIBH_Heart", "Lungs", "DIBH_PTV_bridge")
+  expected.colnames <- paste0(rep(structures.names, each = 9), "_", 1:9)
   actual.colnames <- colnames(robustness)[-1]
   
-  expect_true(all(expected.colnames %in% actual.colnames))
+  expect_equal(actual.colnames, expected.colnames)
+  expect_equal(sum(is.na(robustness)), 0)
   
   # test with renamed structures
-  robustness <- readRobustness(robustness_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
   
-  expected.colnames <- paste0(rep(renamed.structures, each = 9), "_", 1:9)
+  structures.names <- renamed.structures
+  expected.colnames <- paste0(rep(structures.names, each = 9), "_", 1:9)
   actual.colnames <- colnames(robustness)[-1]
   
-  expect_true(all(expected.colnames %in% actual.colnames))
-  
-  expect_true(sum(is.na(robustness)) == 0)
+  expect_equal(actual.colnames, expected.colnames)
+  expect_equal(sum(is.na(robustness)), 0)
   
 }
 
