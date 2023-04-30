@@ -1,13 +1,11 @@
 # -------------------------------------------------------------------------------------
 # Author: Martina Bonomi
 # Date: May 2023
-# Rscript: functions definition
 #
-# Name of the project: Visualization and analysis of "FIonA"'s proton treatment plans
-# Aim of the project: to process and visualize proton treatment plans
-#     outcome from "FIonA" treatment planning system
+# Rscript: functions definition
 # --------------------------------------------------------------------------------------
 
+# Load libraries
 library(tidyverse)
 library(ggplot2)
 library(dplyr)

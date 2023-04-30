@@ -1,11 +1,8 @@
 # -------------------------------------------------------------------------------------
 # Author: Martina Bonomi
 # Date: May 2023
-# Rscript : tests definition
 #
-# Name of the project: Visualization and analysis of "FIonA"'s proton treatment plans
-# Aim of the project: to process and visualize proton treatment plans
-#     outcome from "FIonA" treatment planning system
+# Rscript : tests definition
 # --------------------------------------------------------------------------------------
 
 # uplaod functions to test
