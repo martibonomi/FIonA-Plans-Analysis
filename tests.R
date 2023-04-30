@@ -143,17 +143,15 @@ test_getVd <- function(){
   # THEN: the function returns the correct value of V[d%] for the selected structure
   # ---------------------------------------------------------------------------------------------
   
-  plan <- readDVHs(dvhs.csv = dvhs_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
-
   # calculate V95 for CTV
   structure <- "CTV"
   d = 95
   expected.Vd = 97.238
   
-  Vd <- getVd(plan, d, structure) 
+  plan <- readDVHs(dvhs.csv = dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  actual.Vd <- getVd(plan, d, structure) 
   
-  # check that V[d%] value is the expected one
-  expect_true(Vd == expected.Vd)
+  expect_equal(actual.Vd, expected.Vd)
   
 }
 
@@ -170,18 +168,16 @@ test_getDv <- function() {
   # THEN: the function returns the correct value of D[v%] for the selected structure
   # ---------------------------------------------------------------------------------------------
   
-  plan <- readDVHs(dvhs.csv = dvhs_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
-
-  # calculate V95 for CTV
+  # calculate D2 for CTV
   structure <- "CTV"
   v = 2.025
   expected.Dv = 105.9
   
-  Dv <- getDv(plan, v, structure)
+  plan <- readDVHs(dvhs.csv = dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  actual.Dv <- getDv(plan, v, structure)
   
-  # check that D[v%] value is the expected one within a certain tolerance interval
-  tolerance <- 1e-6
-  expect_true(abs(Dv - expected.Dv) < tolerance)
+  # adding a tolerance as the approxfun in "getDv" might approximate values for fitting the curve
+  expect_equal(actual.Dv, expected.Dv, tolerance = 1e-6)
   
 }
 
