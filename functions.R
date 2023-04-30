@@ -11,9 +11,8 @@
 library(tidyverse)
 library(ggplot2)
 library(dplyr)
-library(reconPlots)
 library(covr)
-library(assertthat)
+library(testthat)
 
 readDVHs <- function(dvhs.csv, rename.structures = FALSE, structures.names = NA){
   
@@ -257,11 +256,12 @@ selectRobustnessStructures <- function(robustness, keep.structures){
   # keep.structures [chr] -> vector with only structures you want to keep 
   # ---------------------------------------------------------------------------------------------
   
+  keep.idxs <- c()
   for(str in keep.structures){
-    keep.idxs <- c(1, which(str_detect(colnames(robustness), str))) # idx 1 is for Dose
+    keep.idxs <- c(keep.idxs, which(str_detect(colnames(robustness), str))) # idx 1 is for Dose
   }
   
-  robustness <- robustness[, keep.idxs]
+  robustness <- robustness[, c(1, keep.idxs)]
   
   return(robustness)
   
@@ -481,13 +481,64 @@ getDv <- function(dvhs, v, structure){
   vol <- approxfun(dose, vol)
   
   # find intersection with v value
-  Dv <- uniroot(function(dose) fun(dose) - v, c(min(dose), max(dose)))$root
+  Dv <- uniroot(function(dose) vol(dose) - v, c(min(dose), max(dose)))$root
   
   return(Dv)
   
 }
 
 
+getStructureRobustness <- function(robustness, dose, structure){
+  
+  # ---------------------------------------------------------------------------------------------
+  # Function's description:
+  # It finds the value of the robustness curve for the worst case scenario for the threshold 
+  #   value you want to check for a selected structure (generally only CTV and PTV are checked)
+  # ---------------------------------------------------------------------------------------------
+  # Parameters:
+  # robustness -> robustness dataframe from plan for which you want to check robustness
+  # value [num] <- dose threshold value for which you want to check robustness
+  # structure [chr] -> structure for which you want to calculate the robustness (generally only
+  #   CTV and PTV are used)
+  # ---------------------------------------------------------------------------------------------
+  
+  robustness.spread <- findRobustnessSpread(robustness)
+  
+  str.idx <- which(colnames(robustness.spread) == paste(structure, "min", sep = "_"))
+  dose.idx <- which(robustness.spread$Dose == dose)
+  
+  value <- robustness.spread[dose.idx, str.idx]
+  
+  return(value)
+  
+}
 
 
+getEnergies <- function(energies.csv){
+  
+  # ---------------------------------------------------------------------------------------------
+  # Function's description:
+  # It gives you the list of total number of energy layers for the whole plan and for each field
+  # ---------------------------------------------------------------------------------------------
+  # Parameters:
+  # energies.csv -> .csv file output from FIonA with energies, spots and weights
+  # ---------------------------------------------------------------------------------------------
+  
+  energies <- read.csv(energies.csv)
+  
+  total.energies <- sort(unique(energies$Energy..MeV.))
+  fields <- sort(unique(energies$Field))
+  fields <- gsub(" ", "", fields)
+  
+  list.energies <- list()
+  list.energies[["Total energies"]] <- total.energies
+  
+  for(field in fields){
+    curr.field <- energies[which(energies$Field %in% field),]
+    list.energies[[field]] <- sort(unique(curr.field$Energy..MeV.))
+  }
+  
+  return(list.energies)
+  
+}
 
