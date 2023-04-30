@@ -10,9 +10,7 @@ To create a plan, different steps must be followed: first, the patient's tumor a
 
 The functions implemented for the analysis and visualization of plans are specific to the PSI's in-house treatment planning system "FIonA".
 
-<div style="text-align:center">
 ![FIonA logo](images/Fiona.png){width="80%"}
-</div>
 
 ## Repository contents
 
