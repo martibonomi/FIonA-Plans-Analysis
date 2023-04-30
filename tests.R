@@ -17,17 +17,16 @@ library(covr)
 library(assertthat)
 library(testthat)
 
-# test data
-dvhs_grid.csv <- "test_data/dvhs_grid.csv"
-robustness_grid.csv <- "test_data/robustness_grid.csv"
-dvhs_air.csv <- "test_data/dvhs_air.csv"
-robustness_air.csv <- "test_data/robustness_air.csv"
-dvhs_water.csv <- "test_data/dvhs_water.csv"
-robustness_water.csv <- "test_data/robustness_water.csv"
+source("functions.R")
 
-# structures
-renamed.structures <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs", "SpinalCord")
-structures.to.keep <- c("PTV", "CTV")
+# test data
+dvhs.csv <- "test_data/dvhs.csv"
+robustness.csv <- "test_data/robustness.csv"
+energies.csv <- "test_data/energies.csv"
+
+# parameters
+renamed.structures <- c("CTV", "Esophagus", "Medulla", "SpinalCord", "Heart", "Lungs", "PTV")
+structures.to.keep <- c("CTV", "PTV")
 
 
 test_readDVHs <- function(){
@@ -43,16 +42,16 @@ test_readDVHs <- function(){
   
   # test with default options
   plan <- readDVHs(dvhs_grid.csv, rename.structures = FALSE)
-  assert_that(length(plan) == 2)
-  assert_that(length(plan$DVHs) == 7 + 1) # number of structures + dose
-  assert_that(length(plan$"Volumes [cc]") == 7)
+  expect_true(length(plan) == 2)
+  expect_true(length(plan$DVHs) == 7 + 1) # number of structures + dose
+  expect_true(length(plan$"Volumes [cc]") == 7)
   
   # test with renamed structures
   plan <- readDVHs(dvhs_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  assert_that(length(plan) == 2)
-  assert_that(length(plan$DVHs) == 7 + 1) # number of structures + dose
-  assert_that(length(plan$"Volumes [cc]") == 7)
-  assert_that(all(colnames(plan$DVHs)[-1] == renamed.structures)) # removing Dose column
+  expect_true(length(plan) == 2)
+  expect_true(length(plan$DVHs) == 7 + 1) # number of structures + dose
+  expect_true(length(plan$"Volumes [cc]") == 7)
+  expect_true(all(colnames(plan$DVHs)[-1] == renamed.structures)) # removing Dose column
   
 }
 
@@ -70,8 +69,8 @@ test_selectDVHsStructures <- function(){
   plan <- readDVHs(dvhs_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
   filtered.plan <- selectDVHsStructures(plan, keep.structures = structures.to.keep)
   
-  assert_that(all(colnames(filtered.plan[["DVHs"]])[-1] %in% structures.to.keep))
-  assert_that(all(colnames(filtered.plan[["Volumes [cc]"]]) %in% structures.to.keep))
+  expect_true(all(colnames(filtered.plan[["DVHs"]])[-1] %in% structures.to.keep))
+  expect_true(all(colnames(filtered.plan[["Volumes [cc]"]]) %in% structures.to.keep))
   
 }
 
@@ -100,7 +99,7 @@ test_readRobustness <- function(){
   expected.colnames <- paste0(original.colnames, "_", 1:9)
   actual.colnames <- colnames(robustness)[-1]
   
-  assert_that(all(expected.colnames %in% actual.colnames))
+  expect_true(all(expected.colnames %in% actual.colnames))
   
   # test with renamed structures
   robustness <- readRobustness(robustness_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
@@ -108,9 +107,9 @@ test_readRobustness <- function(){
   expected.colnames <- paste0(rep(renamed.structures, each = 9), "_", 1:9)
   actual.colnames <- colnames(robustness)[-1]
   
-  assert_that(all(expected.colnames %in% actual.colnames))
+  expect_true(all(expected.colnames %in% actual.colnames))
   
-  assert_that(sum(is.na(robustness)) == 0)
+  expect_true(sum(is.na(robustness)) == 0)
   
 }
 
@@ -131,14 +130,14 @@ test_selectRobustnessStructures <- function(){
   
   structures.to.keep.curves <- paste0(rep(structures.to.keep, each = 9), "_", 1:9)
   
-  assert_that(all(colnames(filtered.robustness)[-1] %in% structures.to.keep.curves))
+  expect_true(all(colnames(filtered.robustness)[-1] %in% structures.to.keep.curves))
   
 }
 
 
-test_findRobustnessSpread() <- function(){
-  # to be done
-}
+# test_findRobustnessSpread <- function(){
+#   # to be done
+# }
 
 
 test_getVd <- function(){
@@ -163,7 +162,7 @@ test_getVd <- function(){
   Vd <- getVd(plan, d, structure) 
   
   # check that V[d%] value is the expected one
-  assert_that(Vd == expected.Vd)
+  expect_true(Vd == expected.Vd)
   
 }
 
@@ -191,7 +190,56 @@ test_getDv <- function() {
   
   # check that D[v%] value is the expected one within a certain tolerance interval
   tolerance <- 1e-6
-  assert_that(abs(Dv - expected.Dv) < tolerance)
+  expect_true(abs(Dv - expected.Dv) < tolerance)
+  
+}
+
+
+test_getStructureRobustness <- function(){
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns the correct value of robustness for the worst 
+  #   case scenario of the selected structure
+  #
+  # GIVEN: a datframe of structures' robustness dvhs (output of "readRobustness), a value for
+  #   the dose and the name of a structure wìfor which you want to calculate robustness
+  # WHEN: I apply "getStructureRobustness" function
+  # THEN: the function returns the correct value of V[d%] of robustness dvhs for the worst case
+  #   for the worst case scenario of the selected structure
+  # ---------------------------------------------------------------------------------------------
+  
+  robustness <- readRobustness(robustness_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  
+  # expected value
+  structure <- "CTV"
+  dose = 95
+  expected.Vd <- 92.755
+  
+  # calculated value
+  robustness.Vd <- getStructureRobustness(robustness, dose, structure)
+  
+  expect_true(robustness.Vd == expected.Vd)
+  
+}
+
+
+test_getEnergies <- function(){
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a list with the total energies used and the 
+  #   energies for each field
+  #
+  # GIVEN: a .csv file with energy values and spots' weights output from FIonA
+  # WHEN: I apply "getEnergies" function
+  # THEN: the function returns a list with the total energies used and the energies for each 
+  #   field of the plan
+  # ---------------------------------------------------------------------------------------------
+  
+  energies <- getEnergies(energies.csv = energies.csv)
+    
+  expect_true(typeof(energies) == "list")
+  expect_true(length(energies) == 4)
+  expect_true(all(names(energies) == c("Total energies", "F0", "F1", "F2")))
   
 }
 
