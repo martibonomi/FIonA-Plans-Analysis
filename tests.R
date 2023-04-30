@@ -162,7 +162,7 @@ test_getVd <- function(){
   
   Vd <- getVd(plan, d, structure) 
   
-  # check that V[d%] value is correct
+  # check that V[d%] value is the expected one
   assert_that(Vd == expected.Vd)
   
 }
@@ -189,7 +189,7 @@ test_getDv <- function() {
   
   Dv <- getDv(plan, v, structure)
   
-  # check that D[v%] value is correct within a certain tolerance interval
+  # check that D[v%] value is the expected one within a certain tolerance interval
   tolerance <- 1e-6
   assert_that(abs(Dv - expected.Dv) < tolerance)
   
