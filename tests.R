@@ -115,12 +115,13 @@ test_selectRobustnessStructures <- function(){
   # THEN: the function returns a plan with only the robustness DVHs of the selected structures 
   # ---------------------------------------------------------------------------------------------
   
-  robustness <- readRobustness(robustness_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
   filtered.robustness <- selectRobustnessStructures(robustness, keep.structures = structures.to.keep)
   
-  structures.to.keep.curves <- paste0(rep(structures.to.keep, each = 9), "_", 1:9)
+  expected.colnames <- paste0(rep(structures.to.keep, each = 9), "_", 1:9)
+  actual.colnames <- colnames(filtered.robustness)[-1]
   
-  expect_true(all(colnames(filtered.robustness)[-1] %in% structures.to.keep.curves))
+  expect_equal(actual.colnames, expected.colnames)
   
 }
 
