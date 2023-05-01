@@ -12,6 +12,7 @@ library(dplyr)
 library(covr)
 library(testthat)
 
+
 readDVHs <- function(dvhs.csv, rename.structures = FALSE, structures.names = NA){
   
   # ---------------------------------------------------------------------------------------------
@@ -525,9 +526,9 @@ getEnergies <- function(energies.csv){
   energies <- read.csv(energies.csv)
   
   total.energies <- sort(unique(energies$Energy..MeV.))
+  energies$Field <- gsub(" ", "", energies$Field)
   fields <- sort(unique(energies$Field))
-  fields <- gsub(" ", "", fields)
-  
+
   list.energies <- list()
   list.energies[["Total energies"]] <- total.energies
   
