@@ -10,6 +10,7 @@ source("functions.R")
 
 # test data
 dvhs.csv <- "test_data/dvhs.csv"
+dvhs_comparison.csv <- "test_data/dvhs_comparison.csv"
 robustness.csv <- "test_data/robustness.csv"
 energies.csv <- "test_data/energies.csv"
 
@@ -62,6 +63,77 @@ test_selectDVHsStructures <- function(){
   
   expect_equal(colnames(filtered.plan[["DVHs"]])[-1], structures.to.keep)
   expect_equal(colnames(filtered.plan[["Volumes [cc]"]]), structures.to.keep)
+  
+}
+
+
+test_plotDVHs <- function(){
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a plot with the correct title assigned to the 
+  #   plot 
+  #   
+  # GIVEN: a plan output from "readDVHs" function
+  # WHEN: I apply "plotDVHs" function with title's options
+  # THEN: the function correctly assigns the title chosen for the plot
+  # ---------------------------------------------------------------------------------------------
+  
+  plan <- readDVHs(dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  
+  # test with title = TRUE
+  plot <- plotDVHs(plan, plan.name = "test plan", title = TRUE)
+  expected.title <- "DVHs for plan test plan"
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+  # test with title = FALSE
+  plot <- plotDVHs(plan, plan.name = "test plan", title = FALSE)
+  expected.title <- NULL
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+  # test with title = "test title"
+  plot <- plotDVHs(plan, plan.name = "test plan", title = "test title")
+  expected.title <- "test title"
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+}
+
+
+test_plotComparePlansDVHs <- function(){
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a plot with the correct title assigned to the 
+  #   plot 
+  #   
+  # GIVEN: a plan output from "readDVHs" function
+  # WHEN: I apply "plotComparePlansDVHs" function with title's options
+  # THEN: the function correctly assigns the title chosen for the plot
+  # ---------------------------------------------------------------------------------------------
+  
+  plan1 <- readDVHs(dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  plan2 <- readDVHs(dvhs_comparison.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  
+  plans <- list("Plan 1" = plan1, "Plan 2" = plan2)
+  
+  # test with title = TRUE
+  plot <- plotComparePlansDVHs(plans, title = TRUE)
+  expected.title <- "Plan 1 vs. Plan 2"
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+  # test with title = FALSE
+  plot <- plotComparePlansDVHs(plans, title = FALSE)
+  expected.title <- NULL
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+  # test with title = "test title"
+  plot <- plotComparePlansDVHs(plans, title = "test title")
+  expected.title <- "test title"
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
   
 }
 
@@ -123,9 +195,63 @@ test_selectRobustnessStructures <- function(){
 }
 
 
-# test_findRobustnessSpread <- function(){
-#   # to be done
-# }
+test_plotRobustness <- function(){
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a plot with the correct title assigned to the 
+  #   plot 
+  #   
+  # GIVEN: a plan output from "readRobustness" function
+  # WHEN: I apply "plotRobustness" function with title's options
+  # THEN: the function correctly assigns the title chosen for the plot
+  # ---------------------------------------------------------------------------------------------
+  
+  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  
+  # test with title = TRUE
+  plot <- plotRobustness(robustness, robustness.name = "test rob", title = TRUE)
+  expected.title <- "Robustness DVHs for plan test rob"
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+  # test with title = FALSE
+  plot <- plotRobustness(robustness, robustness.name = "test plan", title = FALSE)
+  expected.title <- NULL
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+  # test with title = "test title"
+  plot <- plotRobustness(robustness, robustness.name = "test plan", title = "test title")
+  expected.title <- "test title"
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+}
+
+
+test_findRobustnessSpread <- function(){
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a dataframe with a column for dose and three 
+  #   columns for each structure: one with the minim values for DVHs for each point of dose,
+  #   one with the nominal values and one with the maximum values for DVHs for each point of 
+  #   dose
+  #
+  # GIVEN: a dataframe of robustness DVHs output from "readRobustness"
+  # WHEN: I apply "findRobustnessSpread" function
+  # THEN: the function returns a dataframe with nominal curve, minimum points and maximum points
+  #   for each structure
+  # ---------------------------------------------------------------------------------------------
+  
+  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  spread <- findRobustnessSpread(robustness)
+  
+  expected.colnames <- paste0(rep(renamed.structures, each = 3), "_", c("nom", "max", "min"))
+  actual.colnames <- colnames(spread)[-1]
+  
+  expect_equal(actual.colnames, expected.colnames)
+  
+}
 
 
 test_getVd <- function(){
