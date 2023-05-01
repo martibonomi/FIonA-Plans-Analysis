@@ -92,7 +92,7 @@ in which you can decide whether to rename or not the names of structures importe
 plotDVHs(plan = my_plan, plan.name = "My Plan", title = TRUE)
 ```
 
-in which you can decide whether or not to add a title or not on your plot. If `title = TRUE`, the function will plot DVHs for plan *plan.name* as title, if `title = FALSE` the function won't plot any title, if instead `title = chr` is set to any string, the function will plot the string you provided as title.
+in which you can decide whether or not to add a title on your plot. If `title = TRUE`, the function will plot DVHs for plan *plan.name* as title, if `title = FALSE` the function won't plot any title, if instead `title = chr` is set to any string, the function will plot the string you provided as title.
 
 ![](images/dvhs_plot.png)
 
