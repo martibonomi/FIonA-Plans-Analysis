@@ -70,7 +70,7 @@ file_coverage(source_files = "functions.R", test_files = "tests.R")
 
 The functions implemented and contained in this repository are specific for analyzing outputs from FIonA.
 
-### Plans' DVHs visualization
+### Plan's DVHs visualization
 
 When creating a plan, dose-volume histograms (DVHs) are created. They are defined as cumulative dose histograms that represent the percentage of the volume of a particular structure (target or OAR) receiving a certain dose level or greater. The dose is typically plotted on the x-axis, and the volume percentage on the y-axis.
 
@@ -117,3 +117,35 @@ plotComparePlansDVHs(plans = list("Plan 1" = plan1, "Plan 2" = plan2), title = T
 where the function takes as input a list of plans output from the `readDVHs` function. The settings for `title` are the same as the previously explained.
 
 ![](images/dvhs_comparison_plot.png)
+
+### Plan's robustness assessment
+
+Robustness assessment in proton therapy planning involves evaluating the sensitivity of the treatment plan to geometrical shifts and range uncertainties of the target to ensure that the plan remains effective in delivering the prescribed dose.
+
+To assess the robustness of a plan, FIonA generates 9 different DVHs which correspond to 9 alternative scenarios considered: 6 curves account for geometrical shifts in the ± x, y and z directions, 2 curves account for range uncertainties, while the last curve corresponds to the nominal one.
+
+It is possible to visualize the robustness DVHs of a plan by using the following functions:
+
+-   first, upload the .csv file output from the *Calculate Robustness DVHs* option in FIonA with the `readRobustness` function:
+
+```         
+my_robustness <- readRobustness(robustness.csv = "path/to/robustness.csv", rename.structures = TRUE, structures.names = renamed.structures)
+```
+
+-   and to plot robustness DVHs, use the `plotRobustness` function:
+
+```         
+plotRobustness(my_robustness, robustness.name = "My Plan", title = TRUE)
+```
+
+where the settings concerning the renaming of structures and the plot's title are the same as the ones explained for the `readDVHs` and `plotDVHs` functions, respectively.
+
+![](images/robustness_plot.png)
+
+Also in this case, it is possible to select robustness DVHs for certain structures using the `selectRobustnessStructures` function:
+
+```         
+filtered_robustness <- selecteDVHsStructures(plan = my_robustness, keep.structures = c("CTV", "PTV"))
+```
+
+and visualize only the robustness DVHs of the selected structures applying `plotRobustness` to *filtered_robustness*.
