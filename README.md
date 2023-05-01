@@ -205,4 +205,4 @@ To do that, the `getEnergies` function can be used as follows:
 energies <- getEnergies(energies.csv = "path/to/energies.csv")
 ```
 
-which takes as input a csv file output from FIonA which contains the energy values and weights of spots for each field and returns a list with the energy values of the whole plans and the energy values for each field.
+which takes as input a csv file output from FIonA which contains the energy values and weights of spots for each field and returns a list with the energy values of the whole plan and the energy values for each field.
