@@ -14,6 +14,15 @@ The functions implemented for the analysis and visualization of plans are specif
 
 ## Repository contents
 
+This repository contains specific scripts and files necessary to analyze and visualize data output from PSI's FIonA TPS.
+
+-   `install_packages.R` script contains the packages necessary to run the functions
+-   `functions.R` script contains the documentation for the functions implemented
+-   `tests.R` script contains the test routines necessary to test functions
+-   `test_data` folder contains the data necessary to run tests on functions
+-   `analysis_data` folder contains data to run examples on functions' use
+-   `images` folder contains plots from examples
+
 ## Installation
 
 To clone the git repository, type the following commands from terminal:
