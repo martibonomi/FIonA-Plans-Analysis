@@ -108,17 +108,17 @@ and visualize only DVHs of the selected structures applying `plotDVHs` to *filte
 
 To characterize these dose distributions, common dose-volume parameters can be defined:
 
--   $D_V$ represents the minimum dose $D$[%/Gy] that volume $V\[\%/ml\]$ of a selected\
+-   $D_V$ represents the minimum dose D[%/Gy] that volume V[%/ml] of a selected\
     organ receives;
 
--   $V_D$ represents the volume $V[\%/ml]$ of a selected organ that receives\
-    at least a dose $D [\%/Gy]$.
+-   $V_D$ represents the volume V[%/ml] of a selected organ that receives\
+    at least a dose D[%/Gy].
 
-The most used parameters for evaluating the goodness of a plan are $V95\%$, $D98\%$ and $D5\% - D95\%$ of the CTV or PTV.
+The most used parameters for evaluating the goodness of a plan are V95%, D98% and D5% - D95% of the CTV or PTV.
 
 To calculate these values for a specific structure, the functions `getDv` and `getVd` can be used.
 
-For example, to calculate the value $D98\%$ for the CTV of a plan you can simply run:
+For example, to calculate the value D98% for the CTV of a plan you can simply run:
 
 ```         
 d98 <- getDv(plan = my_plan, v = 98, structure = "CTV")
@@ -176,7 +176,7 @@ filtered_robustness <- selectDVHsStructures(plan = my_robustness, keep.structure
 
 and visualize only the robustness DVHs of the selected structures applying `plotRobustness` to *filtered_robustness*.
 
-To assess the robustness of a plan, usually constraints on the robustness curves must be satisfied. In many situations, the constraint applied is that the robustness DVHs for the CTV should satisfy \$D95\$% \> $95$% in the worst-case scenario.
+To assess the robustness of a plan, usually constraints on the robustness curves must be satisfied. In many situations, the constraint applied is that the robustness DVHs for the CTV should satisfy D95% \> 95% in the worst-case scenario.
 
 To calculate this vale, the `getStructureRobustness` function can be used as follows:
 
