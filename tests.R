@@ -24,7 +24,7 @@ test_that("--readDVHs-- function works correctly", {
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function gives a list with two objects: plans' DVHs and volumes
   #
-  # GIVEN: a .csv file output from the FIonA treatment planning system
+  # GIVEN: a csv file output from the FIonA treatment planning system
   # WHEN: I apply "readDVHs" function
   # THEN: the function returns a list with two objects: a dataframe with DVHs values (double) 
   #   and a dataframe with structures' volumes
@@ -53,7 +53,7 @@ test_that("--selectDVHsStructures-- function works correctly", {
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function keeps only the DVHs and volumes of the selected structures
   #
-  # GIVEN: a plan (output of readDVHs) and a vector with structures names
+  # GIVEN: a plan (output of "readDVHs") and a vector with structures names
   # WHEN: I apply "selectDVHsStructures" function
   # THEN: the function returns a plan with only the DVHs and volumes of the selected structures 
   # ---------------------------------------------------------------------------------------------
@@ -144,7 +144,7 @@ test_that("--readRobustness-- function works correclty", {
   # This test asserts that the function correctly re-enumerates the columns for each geometrical
   #   shift of the .csv file output from the robustness calculation 
   #   
-  # GIVEN: a .csv file output from FIonA's robustness calculation
+  # GIVEN: a csv file output from FIonA's robustness calculation
   # WHEN: I apply "readRobustness" function
   # THEN: the function correctly re-enumerates the columns for geometrical shifts and renames
   #   structures if rename.structures = TRUE
@@ -232,15 +232,13 @@ test_that("--plotRobustness-- function works correctly", {
 test_that("--findRobustnessSpread-- function works correctly", {  
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function returns a dataframe with a column for dose and three 
-  #   columns for each structure: one with the minim values for DVHs for each point of dose,
-  #   one with the nominal values and one with the maximum values for DVHs for each point of 
-  #   dose
+  # This test asserts that the function returns a dataframe with three columns for each 
+  #   structure: str_nom, str_max and str_min with nominal, maximum and minimum values of 
+  #   the 9 robustness curves for each structures
   #
   # GIVEN: a dataframe of robustness DVHs output from "readRobustness"
   # WHEN: I apply "findRobustnessSpread" function
-  # THEN: the function returns a dataframe with nominal curve, minimum points and maximum points
-  #   for each structure
+  # THEN: the function returns a dataframe with str_nom, str_max and str_min for each structure
   # ---------------------------------------------------------------------------------------------
   
   robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
@@ -295,8 +293,8 @@ test_that("--getVd-- function works correctly", {
   # This test asserts that the function returns the correct value for V[d%] for the selected 
   #   structure
   #
-  # GIVEN: a list of dvhs of the wanted plan (output of "readPlan"), a value "d" for the dose 
-  #   the structure name for which you want to compute V[d%]
+  # GIVEN: a plan (output of "readPlan"), a value "d" for the dose and the structure name for 
+  #   which you want to compute V[d%]
   # WHEN: I apply "getVd" function
   # THEN: the function returns the correct value of V[d%] for the selected structure
   # ---------------------------------------------------------------------------------------------
@@ -320,8 +318,8 @@ test_that("--getDv-- function works correctly", {
   # This test asserts that the function returns the correct value for D[v%] for the selected 
   #   structure
   #
-  # GIVEN: a list of dvhs of the wanted plan (output of "readPlan"), a value "v" for the dose 
-  #   the structure name for which you want to compute D[v%]
+  # GIVEN: a plan (output of "readPlan"), a value "v" for the dose and the structure name for 
+  #   which you want to compute D[v%]
   # WHEN: I apply "getDv" function
   # THEN: the function returns the correct value of D[v%] for the selected structure
   # ---------------------------------------------------------------------------------------------
@@ -347,10 +345,10 @@ test_that("--getStructureRobustness-- function works correcly",{
   #   case scenario of the selected structure
   #
   # GIVEN: a datframe of structures' robustness dvhs (output of "readRobustness), a value for
-  #   the dose and the name of a structure wìfor which you want to calculate robustness
+  #   the dose and the name of a structure for which you want to calculate robustness
   # WHEN: I apply "getStructureRobustness" function
   # THEN: the function returns the correct value of V[d%] of robustness dvhs for the worst case
-  #   for the worst case scenario of the selected structure
+  #   scenario of the selected structure
   # ---------------------------------------------------------------------------------------------
   
   # expected value
@@ -372,7 +370,7 @@ test_that("--getEnergies-- function works correctly", {
   # This test asserts that the function returns a list with the total energies used and the 
   #   energies for each field
   #
-  # GIVEN: a .csv file with energy values and spots' weights output from FIonA
+  # GIVEN: a csv file with energy values and spots' weights output from FIonA
   # WHEN: I apply "getEnergies" function
   # THEN: the function returns a list with the total energies used and the energies for each 
   #   field of the plan
