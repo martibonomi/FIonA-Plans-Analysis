@@ -16,12 +16,12 @@ The functions implemented for the analysis and visualization of plans are specif
 
 This repository contains specific scripts and files necessary to analyze and visualize data output from PSI's FIonA TPS.
 
--   `install_packages.R` script contains the packages necessary to run the functions
--   `functions.R` script contains the documentation for the functions implemented
--   `tests.R` script contains the test routines necessary to test functions
--   `test_data` folder contains the data necessary to run tests on functions
--   `analysis_data` folder contains data to run examples on functions' use
--   `images` folder contains plots from examples
+- the `install_packages.R` script contains the packages necessary to run the functions
+- the `functions.R` script contains the documentation for the functions implemented
+- the `tests.R` script contains the test routines necessary to test functions
+- the `test_data` folder contains the data necessary to run tests on functions
+- the `analysis_data` folder contains data to run examples on functions' use
+- the `images` folder contains plots from examples
 
 ## Installation
 
