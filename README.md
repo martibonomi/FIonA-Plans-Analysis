@@ -23,12 +23,24 @@ git clone https://github.com/martibonomi/FIonA-Plans-Analysis
 cd FIonA-Plans-Analysis
 ```
 
-To run the functions used for plans' analysis and visualization, it is necessary to install some required packages. To do that, type the following command from terminal inside the R environment:
+To run the functions used for plans' analysis and visualization, it is necessary to install some required packages. To do that, type the following command from terminal **inside the R environment**:
 
-```
-R
+```         
 source("install_packages.R")
 ```
 
-## Usage
+After that, simply load the functions in the environment by typing:
 
+```         
+source("functions.R")
+```
+
+to start analyzing data and the plans created.
+
+To test functions and see the overall coverage, instead type:
+
+```         
+file_coverage(source_files = "functions.R", test_files = "tests.R")
+```
+
+## Usage
