@@ -104,6 +104,32 @@ filtered_plan <- selecteDVHsStructures(plan = my_plan, keep.structures = c("CTV"
 
 and visualize only DVHs of the selected structures applying `plotDVHs` to *filtered_plan*.
 
+### Quality Parameters
+
+To characterize these dose distributions, common dose-volume parameters can be defined:
+
+-   $D_V$ represents the minimum dose [%/Gy] that volume V [%/ml] of a selected\
+    organ receives;
+
+-   $V_D$ represents the volume [%/ml] of a selected organ that receives\
+    at least a dose D [%/Gy].
+
+The most used parameters for evaluating the goodness of a plan are V95%, D98% and D5%-D95% of the CTV or PTV.
+
+To calculate these values for a specific structure, the functions `getDv` and `getVd` can be used.
+
+For example, to calculate the value D98% for the CTV of a plan you can simply run:
+
+```         
+d98 <- getDv(plan = my_plan, v = 98, structure = "CTV")
+```
+
+while to calculate the value V95% for the CTV of a plan you can run:
+
+```         
+v95 <- getVd(plan = my_plan, d = 95, structure = "CTV")
+```
+
 ### Plans' DVHs comparison
 
 If two or more plans are created, it is possible to visualize and compare the DVHs of these plans all together.
