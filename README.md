@@ -108,7 +108,7 @@ and visualize only DVHs of the selected structures applying `plotDVHs` to *filte
 
 To characterize these dose distributions, common dose-volume parameters can be defined:
 
--   $D_V$ represents the minimum dose $D [\%/Gy]$ that volume $V[\%/ml]$ of a selected\
+-   $D_V$ represents the minimum dose $D$[%/Gy] that volume $V\[\%/ml\]$ of a selected\
     organ receives;
 
 -   $V_D$ represents the volume $V[\%/ml]$ of a selected organ that receives\
@@ -176,7 +176,7 @@ filtered_robustness <- selectDVHsStructures(plan = my_robustness, keep.structure
 
 and visualize only the robustness DVHs of the selected structures applying `plotRobustness` to *filtered_robustness*.
 
-To assess the robustness of a plan, usually constraints on the robustness curves must be satisfied. In many situations, the constraint applied is that the robustness DVHs for the CTV should satisfy $D95\%$ \> $95\%$ in the worst-case scenario.
+To assess the robustness of a plan, usually constraints on the robustness curves must be satisfied. In many situations, the constraint applied is that the robustness DVHs for the CTV should satisfy \$D95\$% \> $95$% in the worst-case scenario.
 
 To calculate this vale, the `getStructureRobustness` function can be used as follows:
 
