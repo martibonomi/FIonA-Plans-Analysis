@@ -31,11 +31,18 @@ The functions implemented for the analysis and visualization of plans are specif
 This repository contains specific scripts and files necessary to analyze and visualize data output from PSI's FIonA TPS.
 
 -   the `install_packages.R` script contains the packages necessary to run the functions
+
 -   the `functions.R` script contains the documentation for the functions implemented
--   the `tests.R` script contains the test routines necessary to test functions
--   the `test_data` folder contains the data necessary to run tests on functions
+
+-   the `plans_analysis.R` script contains a detailed example for an analysis workflow using data contained in the `analysis_data` folder
+
 -   the `analysis_data` folder contains data to run examples on functions' use
+
 -   the `images` folder contains plots from examples
+
+-   the `tests.R` script contains the test routines necessary to test functions
+
+-   the `test_data` folder contains the data necessary to run tests on functions
 
 ## Installation
 
@@ -69,6 +76,8 @@ file_coverage(source_files = "functions.R", test_files = "tests.R")
 ## Functions Usage and Analysis Workflow
 
 The functions implemented and contained in this repository are specific for analyzing outputs from FIonA.
+
+For a more detailed explaination and analysis work flow, see the `plans_analysis.R` script.
 
 ### Plan's DVHs Visualization
 
@@ -187,3 +196,13 @@ rob_d95 <- getStructureRobustness(robustness = my_robustness, dose = 95, structu
 However, this function can be applied also to get other values for different structures in case constraints result to be different.
 
 ### Plan's Energy Layers
+
+Finally, as the pencil beam scanning treatment delivery technique delivers the dose spot by spot for each energy layer inside the target, it can be useful to know which and how many energy layers there are for each field of the plan.
+
+To do that, the `getEnergies` function can be used as follows:
+
+```         
+energies <- getEnergies(energies.csv = "path/to/energies.csv")
+```
+
+which takes as input a .csv file output from FIonA which contains the energy values and weights of spots for each field.
