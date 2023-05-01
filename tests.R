@@ -22,28 +22,28 @@ structures.to.keep <- c("CTV", "PTV")
 test_that("--readDVHs-- function works correctly", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function gives a list with two objcets: plans' DVHs and volumes
+  # This test asserts that the function gives a list with two objects: plans' DVHs and volumes
   #
-  # GIVEN: a .csv file output from FIonA treatment planning system
-  # WHEN: I apply readDVHs function
-  # THEN: the function returns a list with two objects: a dataframe with structures' DVHs 
+  # GIVEN: a .csv file output from the FIonA treatment planning system
+  # WHEN: I apply "readDVHs" function
+  # THEN: the function returns a list with two objects: a dataframe with DVHs values (double) 
   #   and a dataframe with structures' volumes
   # ---------------------------------------------------------------------------------------------
   
   # test with default options
   plan <- readDVHs(dvhs.csv, rename.structures = FALSE)
-  
   expect_equal(length(plan), 2)
+  expect_true(is.data.frame(plan$DVHs))
   expect_equal(length(plan$DVHs), 7 + 1) # number of structures + dose
   expect_equal(length(plan$"Volumes [cc]"), 7)
-
-  # test with renamed structures
-  plan <- readDVHs(dvhs_grid.csv, rename.structures = TRUE, structures.names = renamed.structures)
   
-  expect_true(length(plan) == 2)
-  expect_true(length(plan$DVHs) == 7 + 1) # number of structures + dose
-  expect_true(length(plan$"Volumes [cc]") == 7)
-  expect_true(all(colnames(plan$DVHs)[-1] == renamed.structures)) # removing Dose column
+  # test with renamed structures
+  plan <- readDVHs(dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  expect_equal(length(plan), 2)
+  expect_true(is.data.frame(plan$DVHs))
+  expect_equal(length(plan$DVHs), 7 + 1) # number of structures + dose
+  expect_equal(length(plan$"Volumes [cc]"), 7)
+  expect_true(all(colnames(plan$DVHs)[-1] %in% renamed.structures)) # [-1] for removing Dose column
   
 })
 
@@ -385,4 +385,3 @@ test_that("--getEnergies-- function works correctly", {
   expect_equal(names(energies), c("Total energies", "F0", "F1", "F2"))
   
 })
-
