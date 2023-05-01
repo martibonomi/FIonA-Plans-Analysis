@@ -172,9 +172,9 @@ plotComparePlansDVHs <- function(plans, title = TRUE){
     title <- c()
     for(i in 1:length(plans.names)){
       if(i == length(plans.names)){
-        title <- paste(title, plans.names[i], sep = " ")
+        title <- paste(title, plans.names[i], sep = "")
       } else {
-        title <- paste(title, plans.names[i], "vs.", sep = " ")
+        title <- paste(title, plans.names[i], " vs. ", sep = "")
       }
     }
     plot <- plot + ggtitle(title)
