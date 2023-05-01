@@ -34,7 +34,7 @@ This repository contains specific scripts and files necessary to analyze and vis
 
 -   the `functions.R` script contains the documentation for the functions implemented
 
--   the `plans_analysis.R` script contains a detailed example for an analysis workflow using data contained in the `analysis_data` folder
+-   the `plans_analysis.R` script contains a detailed example for an analysis workflow using example data contained in the `analysis_data` folder
 
 -   the `analysis_data` folder contains data to run examples on functions' use
 
