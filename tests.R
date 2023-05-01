@@ -19,7 +19,7 @@ renamed.structures <- c("CTV", "Esophagus", "Medulla", "SpinalCord", "Heart", "L
 structures.to.keep <- c("CTV", "PTV")
 
 
-test_readDVHs <- function(){
+test_that("--readDVHs-- function works correctly", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function gives a list with two objcets: plans' DVHs and volumes
@@ -45,10 +45,10 @@ test_readDVHs <- function(){
   expect_true(length(plan$"Volumes [cc]") == 7)
   expect_true(all(colnames(plan$DVHs)[-1] == renamed.structures)) # removing Dose column
   
-}
+})
 
 
-test_selectDVHsStructures <- function(){
+test_that("--selectDVHsStructures-- function works correctly", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function keeps only the DVHs and volumes of the selected structures
@@ -64,10 +64,10 @@ test_selectDVHsStructures <- function(){
   expect_equal(colnames(filtered.plan[["DVHs"]])[-1], structures.to.keep)
   expect_equal(colnames(filtered.plan[["Volumes [cc]"]]), structures.to.keep)
   
-}
+})
 
 
-test_plotDVHs <- function(){
+test_that("--plotDVHs-- function works correclty", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function returns a plot with the correct title assigned to the 
@@ -98,10 +98,10 @@ test_plotDVHs <- function(){
   actual.title <- plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
-}
+})
 
 
-test_plotComparePlansDVHs <- function(){
+test_that("--plotComparePlansDVHs-- function works correclty", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function returns a plot with the correct title assigned to the 
@@ -135,10 +135,10 @@ test_plotComparePlansDVHs <- function(){
   actual.title <- plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
-}
+})
 
 
-test_readRobustness <- function(){
+test_that("--readRobustness-- function works correclty", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function correctly re-enumerates the columns for each geometrical
@@ -170,10 +170,10 @@ test_readRobustness <- function(){
   expect_equal(actual.colnames, expected.colnames)
   expect_equal(sum(is.na(robustness)), 0)
   
-}
+})
 
 
-test_selectRobustnessStructures <- function(){
+test_that("--selectRobustnessStructures-- function works correctly", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function keeps only the robustness DVHs of the selected structures
@@ -192,10 +192,10 @@ test_selectRobustnessStructures <- function(){
   
   expect_equal(actual.colnames, expected.colnames)
   
-}
+})
 
 
-test_plotRobustness <- function(){
+test_that("--plotRobustness-- function works correctly", {  
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function returns a plot with the correct title assigned to the 
@@ -226,10 +226,10 @@ test_plotRobustness <- function(){
   actual.title <- plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
-}
+})
 
 
-test_findRobustnessSpread <- function(){
+test_that("--findRobustnessSpread-- function works correctly", {  
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function returns a dataframe with a column for dose and three 
@@ -251,10 +251,45 @@ test_findRobustnessSpread <- function(){
   
   expect_equal(actual.colnames, expected.colnames)
   
-}
+})
 
 
-test_getVd <- function(){
+test_that("--plotRobustnessSpread-- function works correctly", {  
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a plot with the correct title assigned to the 
+  #   plot 
+  #   
+  # GIVEN: a plan output from "readRobustness" function
+  # WHEN: I apply "plotRobustnessSpread" function with title's options
+  # THEN: the function correctly assigns the title chosen for the plot
+  # ---------------------------------------------------------------------------------------------
+  
+  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  spread <- findRobustnessSpread(robustness)
+  
+  # test with title = TRUE
+  plot <- plotRobustnessSpread(robustness, robustness.name = "test rob", title = TRUE)
+  expected.title <- "Robustness spread for plan test rob"
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+  # test with title = FALSE
+  plot <- plotRobustnessSpread(robustness, robustness.name = "test plan", title = FALSE)
+  expected.title <- NULL
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+  # test with title = "test title"
+  plot <- plotRobustnessSpread(robustness, robustness.name = "test plan", title = "test title")
+  expected.title <- "test title"
+  actual.title <- plot[["labels"]][["title"]]
+  expect_equal(actual.title, expected.title)
+  
+})
+
+
+test_that("--getVd-- function works correctly", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function returns the correct value for V[d%] for the selected 
@@ -276,11 +311,11 @@ test_getVd <- function(){
   
   expect_equal(actual.Vd, expected.Vd)
   
-}
+})
 
 
-test_getDv <- function() {
-
+test_that("--getDv-- function works correctly", {
+  
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function returns the correct value for D[v%] for the selected 
   #   structure
@@ -302,10 +337,10 @@ test_getDv <- function() {
   # adding a tolerance as the approxfun in "getDv" might approximate values for fitting the curve
   expect_equal(actual.Dv, expected.Dv, tolerance = 1e-6)
   
-}
+})
 
 
-test_getStructureRobustness <- function(){
+test_that("--getStructureRobustness-- function works correcly",{
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function returns the correct value of robustness for the worst 
@@ -328,10 +363,10 @@ test_getStructureRobustness <- function(){
   
   expect_equal(actual.rob, expected.rob)
   
-}
+})
 
 
-test_getEnergies <- function(){
+test_that("--getEnergies-- function works correctly", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function returns a list with the total energies used and the 
@@ -349,5 +384,5 @@ test_getEnergies <- function(){
   expect_equal(length(energies), 4)
   expect_equal(names(energies), c("Total energies", "F0", "F1", "F2"))
   
-}
+})
 
