@@ -4,9 +4,9 @@ This repository contains functions implemented in R for processing and visualizi
 
 ## Introduction
 
-The goal of treatment planning is to deliver a certain amount of dose to the target volume and to minimize the dose to healthy tissues while satisfying prescriptions approved by medical doctors, which assign constraints on the maximum and minimum deliverable dose to organs at risk and to the tumor volume, respectively.
+The goal of treatment planning is to deliver a certain amount of dose to the target volume and to minimize the dose to healthy tissues while satisfying prescriptions approved by medical doctors, which assign constraints on the maximum and minimum deliverable dose to organs at risk (OAR) and to the tumor volume, respectively.
 
-Before creating a plan, the patient's tumor and surrounding tissues must be accurately contoured to provide information about the location, size, and shape of the tumor as well as the surrounding healthy tissue. In this step the the **clinical target volume (CTV)** and the **planning target volume (PTV)** are defined:
+Before creating a plan, the patient's tumor and surrounding tissues must be accurately contoured to provide information about the location, size, and shape of the tumor as well as the surrounding healthy tissues. In this step the the **clinical target volume (CTV)** and the **planning target volume (PTV)** are defined:
 
 -   the **CTV** represents the volume of the tumor and surrounding tissues that need to be irradiated to achieve an effective treatment;
 
@@ -16,33 +16,35 @@ After that, the plan can be designed using a **treatment planning system (TPS)**
 
 -   fields directions are selected and spots are placed by mean of different spot placement algorithms;
 
--   plan's optimization is performed to place spots in an optimal way to achieve a homogeneous dose distribution within the target volume, the delivered dose is normalized;
+-   plan's optimization is performed to place spots in an optimal way to achieve a homogeneous dose distribution within the target volume;
 
 -   plans' quality is assessed by checking its robustness and whether all medical prescriptions are satisfied or not;
 
 -   once the plan is ready, it is delivered to the patient.
 
-The functions implemented for the analysis and visualization of plans are specific to the PSI's in-house treatment planning system **Flexible Ion-planning Application**, also known as **FIonA**.
+The functions contained in this repository have been implemented to assess plans' quality by visualizing data and by calculating some important parameters.
+
+It is important to mention that these functions are specific to the analysis and visualization of data output from the PSI's in-house treatment planning system **Flexible Ion-planning Application**, also known as **FIonA**.
 
 ![](images/Fiona.png)
 
 ## Repository Contents
 
-This repository contains specific scripts and files necessary to analyze and visualize data output from PSI's FIonA TPS.
+This repository contains the following files:
 
--   the `install_packages.R` script contains the packages necessary to run the functions
+-   the `install_packages.R` script contains the packages necessary to run the functions;
 
--   the `functions.R` script contains the documentation for the functions implemented
+-   the `functions.R` script contains the documentation for the functions implemented;
 
--   the `plans_analysis.R` script contains a detailed example for an analysis workflow using example data contained in the `analysis_data` folder
+-   the `plans_analysis.R` script contains a detailed example for an analysis workflow using example data contained in the `analysis_data` folder;
 
--   the `analysis_data` folder contains data to run examples on functions' use
+-   the `analysis_data` folder contains data to run examples on functions' use;
 
--   the `images` folder contains plots from examples
+-   the `images` folder contains plots from examples;
 
--   the `tests.R` script contains the test routines necessary to test functions
+-   the `tests.R` script contains the test routines necessary to test functions;
 
--   the `test_data` folder contains the data necessary to run tests on functions
+-   the `test_data` folder contains the data necessary to run tests on functions.
 
 ## Installation
 
@@ -65,9 +67,9 @@ After that, simply load the functions in the environment by typing:
 source("functions.R")
 ```
 
-and start analyzing data and the plans created.
+and start analyzing data of plans created.
 
-To test functions and see the overall coverage, type instead:
+To test functions and see the overall testing coverage, type instead:
 
 ```         
 file_coverage(source_files = "functions.R", test_files = "tests.R")
@@ -75,19 +77,19 @@ file_coverage(source_files = "functions.R", test_files = "tests.R")
 
 ## Functions Usage and Analysis Workflow
 
-The functions implemented and contained in this repository are specific for analyzing outputs from FIonA.
+In this section, a description of functions usage and analysis workflow is given.
 
-For a more detailed explaination and analysis work flow, see the `plans_analysis.R` script.
+For the complete workflow and usage of functions, see the `plans_analysis.R` script.
 
 ### Plan's DVHs Visualization
 
-When creating a plan, dose-volume histograms (DVHs) are created. They are defined as cumulative dose histograms that represent the percentage of the volume of a particular structure (target or OAR) receiving a certain dose level or greater. The dose is typically plotted on the x-axis, and the volume percentage on the y-axis.
+When creating a plan, dose-volume histograms (DVHs) are generated. They are defined as cumulative dose histograms that represent the percentage of the volume of a particular structure (target or OAR) receiving a certain dose level or greater. The dose is plotted on the x-axis, and the volume percentage on the y-axis.
 
-DVHs are used to assess the quality of the plan: indeed a good plan should aim at maximizing the area under the curves of target structures (CTV and PTV) and minimizing the area under the DVHs of healthy tissues and organs at risk.
+DVHs are used to assess the quality of the plan: indeed a good plan should aim at maximizing the area under the curves of target structures (CTV and PTV) and minimizing the area under the DVHs of healthy tissues and OAR.
 
 The DVHs generated by FIonA can be visualized by running the following two functions:
 
--   first upload the .csv file output from FIonA using the `readDVHs` function
+first upload the csv file output from FIonA using the `readDVHs` function
 
 ```         
 my_plan <- readDVHs(dvhs.csv = "path/to/dvhs.csv", rename.structures = TRUE, structures.names = renamed.structures)
@@ -95,7 +97,7 @@ my_plan <- readDVHs(dvhs.csv = "path/to/dvhs.csv", rename.structures = TRUE, str
 
 in which you can decide whether to rename or not the names of structures imported in FIonA by setting `rename.structures = TRUE` and by providing a character vector `renamed.structures` with new names (default values are `rename.structures = FALSE`;
 
--   then you can plot the DVHs of your plan by using the `plotDVHs` function
+then you can plot the DVHs of your plan by using the `plotDVHs` function
 
 ```         
 plotDVHs(plan = my_plan, plan.name = "My Plan", title = TRUE)
@@ -117,11 +119,9 @@ and visualize only DVHs of the selected structures applying `plotDVHs` to *filte
 
 To characterize these dose distributions, common dose-volume parameters can be defined:
 
--   $D_V$ represents the minimum dose D[%/Gy] that volume V[%/ml] of a selected\
-    organ receives;
+-   $D_V$ represents the minimum dose D[%/Gy] that volume V[%/ml] of a selected organ receives;
 
--   $V_D$ represents the volume V[%/ml] of a selected organ that receives\
-    at least a dose D[%/Gy].
+-   $V_D$ represents the volume V[%/ml] of a selected organ that receives at least a dose D[%/Gy].
 
 The most used parameters for evaluating the goodness of a plan are V95%, D98% and D5% - D95% of the CTV or PTV.
 
@@ -149,7 +149,7 @@ To do that, the `plotComparePlansDVHs` function is used:
 plotComparePlansDVHs(plans = list("Plan 1" = plan1, "Plan 2" = plan2), title = TRUE)
 ```
 
-where the function takes as input a list of plans output from the `readDVHs` function. The settings for `title` are the same as the previously explained.
+where the function takes as input a list of plans output from the `readDVHs` function. The settings for `title` are the same the ones explained for the `readDVHs` function.
 
 ![](images/dvhs_comparison_plot.png)
 
@@ -161,13 +161,13 @@ To assess the robustness of a plan, FIonA generates 9 different DVHs which corre
 
 It is possible to visualize the robustness DVHs of a plan by using the following functions:
 
--   first, upload the .csv file output from the *Calculate Robustness DVHs* option in FIonA with the `readRobustness` function:
+first, upload the csv file output from the *Calculate Robustness DVHs* option in FIonA with the `readRobustness` function:
 
 ```         
 my_robustness <- readRobustness(robustness.csv = "path/to/robustness.csv", rename.structures = TRUE, structures.names = renamed.structures)
 ```
 
--   and to plot robustness DVHs, use the `plotRobustness` function:
+and to plot robustness DVHs, use the `plotRobustness` function:
 
 ```         
 plotRobustness(my_robustness, robustness.name = "My Plan", title = TRUE)
@@ -185,9 +185,9 @@ filtered_robustness <- selectDVHsStructures(plan = my_robustness, keep.structure
 
 and visualize only the robustness DVHs of the selected structures applying `plotRobustness` to *filtered_robustness*.
 
-To assess the robustness of a plan, usually constraints on the robustness curves must be satisfied. In many situations, the constraint applied is that the robustness DVHs for the CTV should satisfy D95% \> 95% in the worst-case scenario.
+To assess the robustness of a plan, usually constraints on the robustness curves must be satisfied. An example of constraint could be that the robustness DVHs for the CTV should satisfy D95% \> 95% in the worst-case scenario.
 
-To calculate this vale, the `getStructureRobustness` function can be used as follows:
+To calculate this value, the `getStructureRobustness` function can be used as follows:
 
 ```         
 rob_d95 <- getStructureRobustness(robustness = my_robustness, dose = 95, structure = "CTV")
@@ -205,4 +205,4 @@ To do that, the `getEnergies` function can be used as follows:
 energies <- getEnergies(energies.csv = "path/to/energies.csv")
 ```
 
-which takes as input a .csv file output from FIonA which contains the energy values and weights of spots for each field.
+which takes as input a csv file output from FIonA which contains the energy values and weights of spots for each field and returns a list with the energy values of the whole plans and the energy values for each field.
