@@ -69,7 +69,13 @@ source("functions.R")
 
 and start analyzing data of plans created.
 
-To test functions and see the overall testing coverage, type instead:
+To test functions, type:
+
+```         
+test_file("tests.R")
+```
+
+To check for testing coverage, type instead:
 
 ```         
 file_coverage(source_files = "functions.R", test_files = "tests.R")
