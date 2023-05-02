@@ -438,12 +438,12 @@ getVd <- function(plan, d, structure){
   # structure [chr] -> structure for which you want to compute V[d%] 
   # ---------------------------------------------------------------------------------------------
   
-  structures <- colnames(dvhs[["DVHs"]][-1])
+  structures <- colnames(plan[["DVHs"]][-1])
   
   str.idx <- which(str_detect(structures, structure))
-  selected.structure <- dvhs[["DVHs"]][, str.idx + 1]
+  selected.structure <- plan[["DVHs"]][, str.idx + 1]
   
-  dose.idx <- which(dvhs[["DVHs"]]$Dose == d)
+  dose.idx <- which(plan[["DVHs"]]$Dose == d)
   
   Vd <- selected.structure[dose.idx]
   
@@ -465,12 +465,12 @@ getDv <- function(plan, v, structure){
   # structure [chr] -> structure for which you want to compute D[v%]
   # ---------------------------------------------------------------------------------------------
   
-  structures <- colnames(dvhs[["DVHs"]][-1])
+  structures <- colnames(plan[["DVHs"]][-1])
   
   str.idx <- which(str_detect(structures, structure))
   
-  dose <- dvhs[["DVHs"]]$Dose
-  vol = as.vector(dvhs[["DVHs"]][str.idx + 1])[[1]]
+  dose <- plan[["DVHs"]]$Dose
+  vol = as.vector(plan[["DVHs"]][str.idx + 1])[[1]]
   
   # interpolate curve for volume as it has a finite number of points
   vol <- approxfun(dose, vol)
