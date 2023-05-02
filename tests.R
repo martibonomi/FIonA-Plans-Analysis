@@ -9,10 +9,10 @@
 source("functions.R")
 
 # test data
-dvhs.csv <- "test_data/dvhs.csv"
-dvhs_comparison.csv <- "test_data/dvhs_comparison.csv"
-robustness.csv <- "test_data/robustness_dvhs.csv"
-energies.csv <- "test_data/energies.csv"
+test_dvhs.csv <- "test_data/dvhs.csv"
+test_dvhs_comparison.csv <- "test_data/dvhs_comparison.csv"
+test_robustness.csv <- "test_data/robustness_dvhs.csv"
+test_energies.csv <- "test_data/energies.csv"
 
 # parameters
 renamed.structures <- c("Esophagus", "CTV", "Medulla", "Lungs", "Heart", "PTV")
@@ -31,19 +31,19 @@ test_that("--readDVHs-- function works correctly", {
   # ---------------------------------------------------------------------------------------------
   
   # test with default options
-  plan <- readDVHs(dvhs.csv, rename.structures = FALSE)
-  expect_equal(length(plan), 2)
-  expect_true(is.data.frame(plan$DVHs))
-  expect_equal(length(plan$DVHs), 6 + 1) # number of structures + dose
-  expect_equal(length(plan$"Volumes [cc]"), 6)
+  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = FALSE)
+  expect_equal(length(test_plan), 2)
+  expect_true(is.data.frame(test_plan$DVHs))
+  expect_equal(length(test_plan$DVHs), 6 + 1) # number of structures + dose
+  expect_equal(length(test_plan$"Volumes [cc]"), 6)
   
   # test with renamed structures
-  plan <- readDVHs(dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  expect_equal(length(plan), 2)
-  expect_true(is.data.frame(plan$DVHs))
-  expect_equal(length(plan$DVHs), 6 + 1) # number of structures + dose
-  expect_equal(length(plan$"Volumes [cc]"), 6)
-  expect_true(all(colnames(plan$DVHs)[-1] %in% renamed.structures)) # [-1] for removing Dose column
+  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  expect_equal(length(test_plan), 2)
+  expect_true(is.data.frame(test_plan$DVHs))
+  expect_equal(length(test_plan$DVHs), 6 + 1) # number of structures + dose
+  expect_equal(length(test_plan$"Volumes [cc]"), 6)
+  expect_true(all(colnames(test_plan$DVHs)[-1] %in% renamed.structures)) # [-1] for removing Dose column
   
 })
 
@@ -58,11 +58,11 @@ test_that("--selectDVHsStructures-- function works correctly", {
   # THEN: the function returns a plan with only the DVHs and volumes of the selected structures 
   # ---------------------------------------------------------------------------------------------
   
-  plan <- readDVHs(dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  filtered.plan <- selectDVHsStructures(plan, keep.structures = structures.to.keep)
+  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  filtered.test_plan <- selectDVHsStructures(test_plan, keep.structures = structures.to.keep)
   
-  expect_equal(colnames(filtered.plan[["DVHs"]])[-1], structures.to.keep)
-  expect_equal(colnames(filtered.plan[["Volumes [cc]"]]), structures.to.keep)
+  expect_equal(colnames(filtered.test_plan[["DVHs"]])[-1], structures.to.keep)
+  expect_equal(colnames(filtered.test_plan[["Volumes [cc]"]]), structures.to.keep)
   
 })
 
@@ -78,24 +78,24 @@ test_that("--plotDVHs-- function works correclty", {
   # THEN: the function correctly assigns the title chosen for the plot
   # ---------------------------------------------------------------------------------------------
   
-  plan <- readDVHs(dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
   
   # test with title = TRUE
-  plot <- plotDVHs(plan, plan.name = "test plan", title = TRUE)
+  test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = TRUE)
   expected.title <- "DVHs for plan test plan"
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
   # test with title = FALSE
-  plot <- plotDVHs(plan, plan.name = "test plan", title = FALSE)
+  test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = FALSE)
   expected.title <- NULL
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
   # test with title = "test title"
-  plot <- plotDVHs(plan, plan.name = "test plan", title = "test title")
+  test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = "test title")
   expected.title <- "test title"
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
 })
@@ -112,27 +112,27 @@ test_that("--plotComparePlansDVHs-- function works correclty", {
   # THEN: the function correctly assigns the title chosen for the plot
   # ---------------------------------------------------------------------------------------------
   
-  plan1 <- readDVHs(dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  plan2 <- readDVHs(dvhs_comparison.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  test_plan1 <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  test_plan2 <- readDVHs(dvhs.csv = test_dvhs_comparison.csv, rename.structures = TRUE, structures.names = renamed.structures)
   
-  plans <- list("Plan 1" = plan1, "Plan 2" = plan2)
+  test_plans <- list("Plan 1" = test_plan1, "Plan 2" = test_plan2)
   
   # test with title = TRUE
-  plot <- plotComparePlansDVHs(plans, title = TRUE)
+  test_plot <- plotComparePlansDVHs(plans = test_plans, title = TRUE)
   expected.title <- "Plan 1 vs. Plan 2"
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
   # test with title = FALSE
-  plot <- plotComparePlansDVHs(plans, title = FALSE)
+  test_plot <- plotComparePlansDVHs(plans = test_plans, title = FALSE)
   expected.title <- NULL
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
   # test with title = "test title"
-  plot <- plotComparePlansDVHs(plans, title = "test title")
+  test_plot <- plotComparePlansDVHs(plans = test_plans, title = "test title")
   expected.title <- "test title"
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
 })
@@ -151,24 +151,24 @@ test_that("--readRobustness-- function works correclty", {
   # ---------------------------------------------------------------------------------------------
   
   # test with default options
-  robustness <- readRobustness(robustness.csv, rename.structures = FALSE)
+  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = FALSE)
   
   structures.names <- c("DIBH_Esophagus", "DIBH_CTV_bridge", "DIBH_Medulla", "Lungs", "DIBH_Heart", "DIBH_PTV_bridge")
   expected.colnames <- paste0(rep(structures.names, each = 9), "_", 1:9)
-  actual.colnames <- colnames(robustness)[-1]
+  actual.colnames <- colnames(test_robustness)[-1]
   
   expect_equal(actual.colnames, expected.colnames)
-  expect_equal(sum(is.na(robustness)), 0)
+  expect_equal(sum(is.na(test_robustness)), 0)
   
   # test with renamed structures
-  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
   
   structures.names <- renamed.structures
   expected.colnames <- paste0(rep(structures.names, each = 9), "_", 1:9)
-  actual.colnames <- colnames(robustness)[-1]
+  actual.colnames <- colnames(test_robustness)[-1]
   
   expect_equal(actual.colnames, expected.colnames)
-  expect_equal(sum(is.na(robustness)), 0)
+  expect_equal(sum(is.na(test_robustness)), 0)
   
 })
 
@@ -184,11 +184,11 @@ test_that("--selectRobustnessStructures-- function works correctly", {
   # THEN: the function returns a plan with only the robustness DVHs of the selected structures 
   # ---------------------------------------------------------------------------------------------
   
-  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  filtered.robustness <- selectRobustnessStructures(robustness, keep.structures = structures.to.keep)
+  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  filtered.test_robustness <- selectRobustnessStructures(robustness = test_robustness, keep.structures = structures.to.keep)
   
   expected.colnames <- paste0(rep(structures.to.keep, each = 9), "_", 1:9)
-  actual.colnames <- colnames(filtered.robustness)[-1]
+  actual.colnames <- colnames(filtered.test_robustness)[-1]
   
   expect_equal(actual.colnames, expected.colnames)
   
@@ -206,24 +206,24 @@ test_that("--plotRobustness-- function works correctly", {
   # THEN: the function correctly assigns the title chosen for the plot
   # ---------------------------------------------------------------------------------------------
   
-  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
   
   # test with title = TRUE
-  plot <- plotRobustness(robustness, robustness.name = "test rob", title = TRUE)
+  test_plot <- plotRobustness(robustness = test_robustness, robustness.name = "test rob", title = TRUE)
   expected.title <- "Robustness DVHs for plan test rob"
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
   # test with title = FALSE
-  plot <- plotRobustness(robustness, robustness.name = "test plan", title = FALSE)
+  test_plot <- plotRobustness(robustness = test_robustness, robustness.name = "test plan", title = FALSE)
   expected.title <- NULL
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
   # test with title = "test title"
-  plot <- plotRobustness(robustness, robustness.name = "test plan", title = "test title")
+  test_plot <- plotRobustness(robustness = test_robustness, robustness.name = "test plan", title = "test title")
   expected.title <- "test title"
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
 })
@@ -241,11 +241,11 @@ test_that("--findRobustnessSpread-- function works correctly", {
   # THEN: the function returns a dataframe with str_nom, str_max and str_min for each structure
   # ---------------------------------------------------------------------------------------------
   
-  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  spread <- findRobustnessSpread(robustness)
+  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  test_spread <- findRobustnessSpread(test_robustness)
   
   expected.colnames <- paste0(rep(renamed.structures, each = 3), "_", c("nom", "max", "min"))
-  actual.colnames <- colnames(spread)[-1]
+  actual.colnames <- colnames(test_spread)[-1]
   
   expect_equal(actual.colnames, expected.colnames)
   
@@ -263,25 +263,25 @@ test_that("--plotRobustnessSpread-- function works correctly", {
   # THEN: the function correctly assigns the title chosen for the plot
   # ---------------------------------------------------------------------------------------------
   
-  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  spread <- findRobustnessSpread(robustness)
+  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  test_spread <- findRobustnessSpread(robustness = test_robustness)
   
   # test with title = TRUE
-  plot <- plotRobustnessSpread(robustness, robustness.name = "test rob", title = TRUE)
+  test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test rob", title = TRUE)
   expected.title <- "Robustness spread for plan test rob"
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
   # test with title = FALSE
-  plot <- plotRobustnessSpread(robustness, robustness.name = "test plan", title = FALSE)
+  test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test plan", title = FALSE)
   expected.title <- NULL
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
   # test with title = "test title"
-  plot <- plotRobustnessSpread(robustness, robustness.name = "test plan", title = "test title")
+  test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test plan", title = "test title")
   expected.title <- "test title"
-  actual.title <- plot[["labels"]][["title"]]
+  actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
 })
@@ -300,12 +300,12 @@ test_that("--getVd-- function works correctly", {
   # ---------------------------------------------------------------------------------------------
   
   # calculate V95 for CTV
-  structure <- "CTV"
-  d = 95
+  test_structure <- "CTV"
+  test_d = 95
   expected.Vd = 98.644
   
-  plan <- readDVHs(dvhs.csv = dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  actual.Vd <- getVd(plan, d, structure) 
+  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  actual.Vd <- getVd(plan = test_plan, d = test_d, structure = test_structure) 
   
   expect_equal(actual.Vd, expected.Vd)
   
@@ -325,12 +325,12 @@ test_that("--getDv-- function works correctly", {
   # ---------------------------------------------------------------------------------------------
   
   # calculate D2 for CTV
-  structure <- "CTV"
-  v = 2.201
+  test_structure <- "CTV"
+  test_v = 2.201
   expected.Dv = 105.3
   
-  plan <- readDVHs(dvhs.csv = dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  actual.Dv <- getDv(plan, v, structure)
+  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  actual.Dv <- getDv(plan = test_plan, v = test_v, structure = test_structure)
   
   # adding a tolerance as the approxfun in "getDv" might approximate values for fitting the curve
   expect_equal(actual.Dv, expected.Dv, tolerance = 1e-6)
@@ -352,12 +352,12 @@ test_that("--getStructureRobustness-- function works correcly",{
   # ---------------------------------------------------------------------------------------------
   
   # expected value
-  structure <- "CTV"
-  dose = 95
+  test_structure <- "CTV"
+  test_dose = 95
   expected.rob <- 95.859
   
-  robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  actual.rob <- getStructureRobustness(robustness, dose, structure)
+  robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  actual.rob <- getStructureRobustness(robustness, dose = test_dose, structure = test_structure)
   
   expect_equal(actual.rob, expected.rob)
   
@@ -376,10 +376,10 @@ test_that("--getEnergies-- function works correctly", {
   #   field of the plan
   # ---------------------------------------------------------------------------------------------
   
-  energies <- getEnergies(energies.csv = energies.csv)
+  test_energies <- getEnergies(energies.csv = test_energies.csv)
   
-  expect_true(typeof(energies) == "list")
-  expect_equal(length(energies), 4)
-  expect_equal(names(energies), c("Total energies", "F0", "F1", "F2"))
+  expect_true(typeof(test_energies) == "list")
+  expect_equal(length(test_energies), 4)
+  expect_equal(names(test_energies), c("Total energies", "F0", "F1", "F2"))
   
 })
