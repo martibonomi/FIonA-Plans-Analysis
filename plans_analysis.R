@@ -37,6 +37,8 @@ plotRobustness(robustness = my_robustness, robustness.name = "My Plan", title = 
 filtered.robustness <- selectRobustnessStructures(robustness = my_robustness, keep.structures = structures.to.keep)
 plotRobustness(robustness = filtered.robustness, robustness.name = "My Robustness", title = FALSE)
 
+plotRobustnessSpread(robustness = my_robustness, robustness.name = "My Plan", title = TRUE)
+
 rob_d95 <- getStructureRobustness(robustness = my_robustness, dose = 95, structure = "CTV")
 
 # Plan's Energy Layers

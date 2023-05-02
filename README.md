@@ -180,10 +180,18 @@ where the settings concerning the renaming of structures and the plot's title ar
 Also in this case, it is possible to select robustness DVHs for certain structures using the `selectRobustnessStructures` function:
 
 ```         
-filtered_robustness <- selectDVHsStructures(plan = my_robustness, keep.structures = c("CTV", "PTV"))
+filtered_robustness <- selectRobustnessStructures(plan = my_robustness, keep.structures = c("CTV", "PTV"))
 ```
 
 and visualize only the robustness DVHs of the selected structures applying `plotRobustness` to *filtered_robustness*.
+
+To only visualize the robustness dvhs for the best case scenario and the worst case scenario, you can use the `plotRobustnessSpread` function:
+
+```         
+plotRobustnessSpread(robustness = my_robustness, robustness.name = "My Plan", title = TRUE)
+```
+
+![](images/robustness_spread_plot.png)
 
 To assess the robustness of a plan, usually constraints on the robustness curves must be satisfied. An example of constraint could be that the robustness DVHs for the CTV should satisfy D95% \> 95% in the worst-case scenario.
 
