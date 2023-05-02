@@ -170,7 +170,7 @@ my_robustness <- readRobustness(robustness.csv = "path/to/robustness.csv", renam
 and to plot robustness DVHs, use the `plotRobustness` function:
 
 ```         
-plotRobustness(my_robustness, robustness.name = "My Plan", title = TRUE)
+plotRobustness(robustness = my_robustness, robustness.name = "My Plan", title = TRUE)
 ```
 
 where the settings concerning the renaming of structures and the plot's title are the same as the ones explained for the `readDVHs` and `plotDVHs` functions, respectively.
