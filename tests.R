@@ -11,11 +11,11 @@ source("functions.R")
 # test data
 dvhs.csv <- "test_data/dvhs.csv"
 dvhs_comparison.csv <- "test_data/dvhs_comparison.csv"
-robustness.csv <- "test_data/robustness.csv"
+robustness.csv <- "test_data/robustness_dvhs.csv"
 energies.csv <- "test_data/energies.csv"
 
 # parameters
-renamed.structures <- c("CTV", "Esophagus", "Medulla", "SpinalCord", "Heart", "Lungs", "PTV")
+renamed.structures <- c("Esophagus", "CTV", "Medulla", "Lungs", "Heart", "PTV")
 structures.to.keep <- c("CTV", "PTV")
 
 
@@ -34,15 +34,15 @@ test_that("--readDVHs-- function works correctly", {
   plan <- readDVHs(dvhs.csv, rename.structures = FALSE)
   expect_equal(length(plan), 2)
   expect_true(is.data.frame(plan$DVHs))
-  expect_equal(length(plan$DVHs), 7 + 1) # number of structures + dose
-  expect_equal(length(plan$"Volumes [cc]"), 7)
+  expect_equal(length(plan$DVHs), 6 + 1) # number of structures + dose
+  expect_equal(length(plan$"Volumes [cc]"), 6)
   
   # test with renamed structures
   plan <- readDVHs(dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
   expect_equal(length(plan), 2)
   expect_true(is.data.frame(plan$DVHs))
-  expect_equal(length(plan$DVHs), 7 + 1) # number of structures + dose
-  expect_equal(length(plan$"Volumes [cc]"), 7)
+  expect_equal(length(plan$DVHs), 6 + 1) # number of structures + dose
+  expect_equal(length(plan$"Volumes [cc]"), 6)
   expect_true(all(colnames(plan$DVHs)[-1] %in% renamed.structures)) # [-1] for removing Dose column
   
 })
@@ -153,7 +153,7 @@ test_that("--readRobustness-- function works correclty", {
   # test with default options
   robustness <- readRobustness(robustness.csv, rename.structures = FALSE)
   
-  structures.names <- c("DIBH_CTV_bridge", "DIBH_Esophagus", "DIBH_Medulla", "PRV_SpinalCord", "DIBH_Heart", "Lungs", "DIBH_PTV_bridge")
+  structures.names <- c("DIBH_Esophagus", "DIBH_CTV_bridge", "DIBH_Medulla", "Lungs", "DIBH_Heart", "DIBH_PTV_bridge")
   expected.colnames <- paste0(rep(structures.names, each = 9), "_", 1:9)
   actual.colnames <- colnames(robustness)[-1]
   
@@ -302,7 +302,7 @@ test_that("--getVd-- function works correctly", {
   # calculate V95 for CTV
   structure <- "CTV"
   d = 95
-  expected.Vd = 97.238
+  expected.Vd = 98.644
   
   plan <- readDVHs(dvhs.csv = dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
   actual.Vd <- getVd(plan, d, structure) 
@@ -326,8 +326,8 @@ test_that("--getDv-- function works correctly", {
   
   # calculate D2 for CTV
   structure <- "CTV"
-  v = 2.025
-  expected.Dv = 105.9
+  v = 2.201
+  expected.Dv = 105.3
   
   plan <- readDVHs(dvhs.csv = dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
   actual.Dv <- getDv(plan, v, structure)
@@ -354,7 +354,7 @@ test_that("--getStructureRobustness-- function works correcly",{
   # expected value
   structure <- "CTV"
   dose = 95
-  expected.rob <- 92.755
+  expected.rob <- 95.859
   
   robustness <- readRobustness(robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
   actual.rob <- getStructureRobustness(robustness, dose, structure)
