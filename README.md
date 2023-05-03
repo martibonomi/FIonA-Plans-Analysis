@@ -109,7 +109,7 @@ then you can plot the DVHs of your plan by using the `plotDVHs` function
 plotDVHs(plan = my_plan, plan.name = "My Plan", title = TRUE)
 ```
 
-in which you can decide whether or not to add a title on your plot. If `title = TRUE`, the function will plot DVHs for plan *plan.name* as title, if `title = FALSE` the function won't plot any title, if instead `title = chr` is set to any string, the function will plot the string you provided as title.
+in which you can decide whether or not to add a title on your plot. If `title = TRUE`, the function will plot "DVHs for plan *plan.name*" as title, if `title = FALSE` the function won't plot any title, if instead `title = chr` is set to any string, the function will plot the string you provided as title.
 
 ![](images/dvhs_plot.png)
 
@@ -191,7 +191,7 @@ filtered_robustness <- selectRobustnessStructures(plan = my_robustness, keep.str
 
 and visualize only the robustness DVHs of the selected structures applying `plotRobustness` to *filtered_robustness*.
 
-To only visualize the robustness dvhs for the best case scenario and the worst case scenario, you can use the `plotRobustnessSpread` function:
+To only visualize the robustness DVHs for the best case scenario and the worst case scenario, you can use the `plotRobustnessSpread` function:
 
 ```         
 plotRobustnessSpread(robustness = my_robustness, robustness.name = "My Plan", title = TRUE)
