@@ -49,7 +49,7 @@ test_that("--readDVHs-- function correctly renames structures when renamed.struc
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
-  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, renamed.structures = new.names)
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv", renamed.structures = new.names)
   
   expect_equal(colnames(test_plan$DVHs)[-1], new.names)
   expect_equal(colnames(test_plan$`Volumes [cc]`), new.names)
