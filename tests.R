@@ -79,33 +79,61 @@ test_that("--selectDVHsStructures-- function returns the correct output", {
 })
 
 
-test_that("--plotDVHs-- function works correclty", {
+test_that("--plotDVHs-- function assigns the correct title when title = TRUE", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function returns a plot with the correct title assigned to the 
-  #   plot 
+  # This test asserts that the function returns a plot with title = "DVHs for plan test plan" 
+  #   when title = TRUE for "test plan" plan
   #   
   # GIVEN: a plan output from "readDVHs" function
-  # WHEN: I apply "plotDVHs" function with title's options
-  # THEN: the function correctly assigns the title chosen for the plot
+  # WHEN: I apply "plotDVHs" function with title = TRUE
+  # THEN: the function correctly assigns the expected title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  
-  # test with title = TRUE
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
   test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = TRUE)
+  
   expected.title <- "DVHs for plan test plan"
   actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
-  # test with title = FALSE
+})
+
+
+test_that("--plotDVHs-- function assigns the correct title when title = FALSE", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a plot with no title when title = FALSE for 
+  #   "test plan" plan
+  #   
+  # GIVEN: a plan output from "readDVHs" function
+  # WHEN: I apply "plotDVHs" function with title = FALSE
+  # THEN: the function returns a plot with no title
+  # ---------------------------------------------------------------------------------------------
+  
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
   test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = FALSE)
+  
   expected.title <- NULL
   actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
+
+})
+
+
+test_that("--plotDVHs-- function assigns the correct title when title = 'title' ", {
   
-  # test with title = "test title"
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a plot with title = "title" for "test plan" plan
+  #   
+  # GIVEN: a plan output from "readDVHs" function
+  # WHEN: I apply "plotDVHs" function with title = "title"
+  # THEN: the function correctly assigns the specified title to the plot
+  # ---------------------------------------------------------------------------------------------
+  
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
   test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = "test title")
+
   expected.title <- "test title"
   actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
