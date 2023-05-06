@@ -19,31 +19,50 @@ renamed.structures <- c("Esophagus", "CTV", "Medulla", "Lungs", "Heart", "PTV")
 structures.to.keep <- c("CTV", "PTV")
 
 
-test_that("--readDVHs-- function works correctly", {
+test_that("--readDVHs-- function works correctly for default settings", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function gives a list with two objects: plans' DVHs and volumes
+  # This test asserts that the function "readDVHs" with default values gives a list with two 
+  #   dataframes: "DVHs" with plan's DVHs and "Volumes [cc]" with structures' volumes
   #
   # GIVEN: a csv file output from the FIonA treatment planning system
-  # WHEN: I apply "readDVHs" function
-  # THEN: the function returns a list with two objects: a dataframe with DVHs values (double) 
-  #   and a dataframe with structures' volumes
+  # WHEN: I apply "readDVHs" function with default values (renamed.structures = NA)
+  # THEN: the function returns a list with two objects: a dataframe "DVHs" with DVHs values
+  #   and a dataframe "Volumes [cc]" with structures' volumes
   # ---------------------------------------------------------------------------------------------
   
-  # test with default options
-  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = FALSE)
-  expect_equal(length(test_plan), 2)
-  expect_true(is.data.frame(test_plan$DVHs))
-  expect_equal(length(test_plan$DVHs), 6 + 1) # number of structures + dose
-  expect_equal(length(test_plan$"Volumes [cc]"), 6)
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv", renamed.structures = NA)
   
-  # test with renamed structures
-  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  expect_true(is.list(test_plan))
   expect_equal(length(test_plan), 2)
+  expect_equal(names(test_plan), c("DVHs", "Volumes [cc]"))
+  
   expect_true(is.data.frame(test_plan$DVHs))
   expect_equal(length(test_plan$DVHs), 6 + 1) # number of structures + dose
-  expect_equal(length(test_plan$"Volumes [cc]"), 6)
-  expect_true(all(colnames(test_plan$DVHs)[-1] %in% renamed.structures)) # [-1] for removing Dose column
+  
+  expect_true(is.data.frame(test_plan$`Volumes [cc]`))
+  expect_equal(length(test_plan$`Volumes [cc]`), 6)
+  
+})
+
+test_that("--readDVHs-- function correctly renames structures when renamed.structures != NA", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function renames correctly structures with the new names provided
+  #   in input in renamed.structures
+  #
+  # GIVEN: a csv file output from the FIonA treatment planning system
+  # WHEN: I apply "readDVHs" function providing renamed.structures vector
+  # THEN: the function correctly renames the structures of my plan with names stored in 
+  #   renamed.structures
+  # ---------------------------------------------------------------------------------------------
+  
+  new.names <- c("Esophagus", "CTV", "Medulla", "Lungs", "Heart", "PTV")
+  
+  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, renamed.structures = new.names)
+  
+  expect_true(all(colnames(test_plan$DVHs)[-1] %in% new.names))
+  expect_true(all(colnames(test_plan$`Volumes [cc]`) %in% new.names))
   
 })
 
