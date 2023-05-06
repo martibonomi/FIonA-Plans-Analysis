@@ -17,15 +17,18 @@ readDVHs <- function(dvhs.csv, rename.structures = FALSE, structures.names = NA)
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
-  # Reads a csv file (FIonA output) with the values of DVHs and the volumes for each structure
-  # It returns a list with two elements: a dataframe with the DVHs for each structure and 
-  #   a dataframe with the volumes of each structure
+  # Reads a csv file (FIonA output) with the values of DVHs and the volumes for each structure 
+  #   and stores the data into a list for plan's analysis
   # ---------------------------------------------------------------------------------------------
   # Parameters:
-  # dvhs.csv -> csv fie output from FIonA from DVHs visualization
+  # dvhs.csv -> csv file output from FIonA from DVHs visualization
   # rename.structures [logical] -> TRUE if you want to change the structures' names from FIonA,
   #   FALSE if you want to keep FIonA's names
   # structures.names [chr] -> vector with new structures' names, only if rename.structures = TRUE
+  # --------------------------------------------------------------------------------------------- 
+  # Returns:
+  # A list with two elements: a dataframe called "DVHs" with the DVHs for each structure and 
+  #   a dataframe called "Volumes [cc]" with the volumes of each structure in cc units
   # --------------------------------------------------------------------------------------------- 
   
   dvhs <- read.csv(dvhs.csv)
@@ -59,12 +62,16 @@ selectDVHsStructures <- function(plan, keep.structures){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
-  # It selects only the DVHs for the selected structures from the plan you set as input
+  # It selects only the DVHs for the selected structures from the plan you provide as input
   # ---------------------------------------------------------------------------------------------
   # Parameters:
   # plan [list] <- plan output from the "readDVHs" function
-  # keep.dvhs [chr] -> vector with only structures you want to keep 
+  # keep.structures [chr] -> vector with only structures you want to keep 
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # The same plan you provided as input (output of "readDVHs") but with only the DVHs and volumes 
+  #   selected with keep.structures
+  # --------------------------------------------------------------------------------------------- 
   
   plan[["DVHs"]] <- plan[["DVHs"]][, c("Dose", keep.structures)]
   plan[["Volumes [cc]"]] <- plan[["Volumes [cc]"]][, keep.structures]
@@ -77,8 +84,8 @@ plotDVHs <- function(plan, plan.name, title = TRUE){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
-  # Reads a plan output from the "readDVHs" or "selectDVHsStructures" functions
-  # It plots the DVHs for a single plan
+  # Reads a plan output from the "readDVHs" or "selectDVHsStructures" functions and plots the 
+  #   DVHs for a single plan
   # ---------------------------------------------------------------------------------------------
   # Parameters:
   # plan [list] -> plan for which you want to plot the DVHs, output of "readDVHs" (all structures 
@@ -86,6 +93,9 @@ plotDVHs <- function(plan, plan.name, title = TRUE){
   # plan.name [chr] <- name of the plan
   # title [chr or logical] -> title for the plot, either TRUE, FALSE or character
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # A plot with the DVHs of the plan you provided as input
+  # --------------------------------------------------------------------------------------------- 
   
   plan.dvhs  <- plan[["DVHs"]]  %>%
     gather(key = "DVH_curves", value = "value", -Dose)
@@ -124,8 +134,8 @@ plotComparePlansDVHs <- function(plans, title = TRUE){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
-  # Reads two or more plans output from the "readDVHs" or "selectDVHsStructures" functions
-  # It plots the DVHs comparison between the plans
+  # Reads two or more plans output from the "readDVHs" or "selectDVHsStructures" functions and
+  #   it plots the DVHs comparison between the plans
   # ---------------------------------------------------------------------------------------------
   # Parameters:
   # plans [list] -> list of plans for which you want to plot the DVHs, output of "readDVHs" (all
@@ -133,6 +143,9 @@ plotComparePlansDVHs <- function(plans, title = TRUE){
   #   plotted)
   # title [chr or logical] -> title for the plot, either TRUE, FALSE or character
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # A plot with the comparison of DVHs of the plans you provided as input
+  # --------------------------------------------------------------------------------------------- 
   
   plans.names <- names(plans)
   
@@ -200,6 +213,10 @@ readRobustness <- function(robustness.csv, rename.structures = FALSE, structures
   #   FALSE if you want to keep FIonA's names
   # structures.names [chr] -> vector with new structures names, only if rename.structures = TRUE
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # A dataframe with the robustness curves re-enumerated from 1 to 9 for each structure and 
+  #   renamed (only if specified)
+  # --------------------------------------------------------------------------------------------- 
   
   robustness <- read.csv(robustness.csv)
   colnames(robustness)[1] <- "Dose"
@@ -251,6 +268,10 @@ selectRobustnessStructures <- function(robustness, keep.structures){
   # robustness <- robustness dataframe output from "readRobustness" function
   # keep.structures [chr] -> vector with only structures you want to keep 
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # The same robustness dataframe you provided as input (output of "readRobustness") but with 
+  #   only the robustness curves of structures selected with keep.structures
+  # --------------------------------------------------------------------------------------------- 
   
   keep.idxs <- c()
   for(str in keep.structures){
@@ -278,6 +299,9 @@ plotRobustness <- function(robustness, robustness.name, title = TRUE){
   # robustness.name [chr] <- name of the plan for which you calculated the robustness
   # title [chr or logical] -> title for the plot, either TRUE, FALSE or character
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # A plot with the robustness curves of the robustness dataframe you provided as input
+  # --------------------------------------------------------------------------------------------- 
   
   robustness  <- robustness  %>%
     gather(key = "DVH_curves", value = "value", -Dose)
@@ -328,10 +352,16 @@ findRobustnessSpread <- function(robustness){
   #   each structure)
   # ---------------------------------------------------------------------------------------------
   # Parameters:
-  # robustness -> robustness dataframe for which you want to plot the DVHs, output of 
+  # robustness -> robustness dataframe for which you want to plot the robustness DVHs, output of 
   #   "readRobustness" (all structures plotted) or output of "selectRobustnessStructures"
   #   (only selected structures are plotted)
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # A dataframe with three columns for each structure: *str*_nom is the nominal robustness curve
+  #   (curve number 5 from "readRobustness" output), *str*_max contains the maximum values between
+  #   all the 9 robustness curves for each dose value, and *str*_min contains the minimum values 
+  #   between all the 9 robustness curves for each dose value
+  # --------------------------------------------------------------------------------------------- 
   
   spread.df <- data.frame(Dose = robustness$Dose)
   
@@ -360,7 +390,7 @@ plotRobustnessSpread <- function(robustness, robustness.name, title = TRUE){
   # ---------------------------------------------------------------------------------------------
   # Function's description:
   # Reads a robustness dataframe output from the "readRobustness" function and plots curves for
-  # the worst and best case scenarios of geometrical shifts for each curve
+  #   the worst and best case scenarios of geometrical shifts for each curve
   # ---------------------------------------------------------------------------------------------
   # Parameters:
   # robustness -> robustness dataframe for which you want to plot the spread, output 
@@ -369,6 +399,10 @@ plotRobustnessSpread <- function(robustness, robustness.name, title = TRUE){
   # robustness.name [chr] <- name of the plan for which you calculated the robustness spread
   # title [chr or logical] -> title for the plot, either TRUE, FALSE or character
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # A plot with the nominal robustness curve and the robustness best case scenario and robustness 
+  #   worst case scenario curves for each structure
+  # --------------------------------------------------------------------------------------------- 
   
   # find robustness spread
   robustness.spread <- findRobustnessSpread(robustness)
@@ -429,14 +463,17 @@ getVd <- function(plan, d, structure){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
-  # It finds the V[d%] value for the selected structure of the current plan you are using
+  # It finds the V[d%] value for the selected structure of the current plan you are analyzing
   # ---------------------------------------------------------------------------------------------
   # Parameters:
-  # plan -> plan for which you want to calculate V[d%], output of "readDVHs" 
-  #   function
+  # plan -> plan for which you want to calculate V[d%], output of "readDVHs" function
   # d [num] <- dose percentage for which you want to compute the volume
   # structure [chr] -> structure for which you want to compute V[d%] 
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # A numerical value which corresponds to the V[d%] value for the selected structure of the 
+  #   plan you are analyzing
+  # --------------------------------------------------------------------------------------------- 
   
   structures <- colnames(plan[["DVHs"]][-1])
   
@@ -456,7 +493,7 @@ getDv <- function(plan, v, structure){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
-  # It finds the D[v%] value for the selected structure
+  # It finds the D[v%] value for the selected structure of the current plan you are analyzing
   # ---------------------------------------------------------------------------------------------
   # Parameters:
   # plan -> plan for which you want to calculate D[v%], output of "readDVHs" 
@@ -464,6 +501,10 @@ getDv <- function(plan, v, structure){
   # v [num] <- volume percentage for which you want to compute the dose
   # structure [chr] -> structure for which you want to compute D[v%]
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # A numerical value which corresponds to the D[v%] value for the selected structure of the 
+  #   plan you are analyzing
+  # --------------------------------------------------------------------------------------------- 
   
   structures <- colnames(plan[["DVHs"]][-1])
   
@@ -496,6 +537,10 @@ getStructureRobustness <- function(robustness, dose, structure){
   # structure [chr] -> structure for which you want to calculate the robustness (generally only
   #   CTV and PTV are used)
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # A numerical value which corresponds to the value of the robustness worst case scenario curve
+  #   corresponding to the dose you are interested in
+  # --------------------------------------------------------------------------------------------- 
   
   robustness.spread <- findRobustnessSpread(robustness)
   
@@ -513,11 +558,16 @@ getEnergies <- function(energies.csv){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
-  # It gives you the list of total number of energy layers for the whole plan and for each field
+  # It provides the list of total number of energy layers for the whole plan and for each field
   # ---------------------------------------------------------------------------------------------
   # Parameters:
   # energies.csv -> .csv file output from FIonA with energies, spots and weights
   # ---------------------------------------------------------------------------------------------
+  # Returns:
+  # A list with vectors: a vector "Total energies" with the sorted values of the total energy 
+  #   layers, and vectors "FX" with the sorted values of the energy layers for field "FX"
+  #   (number of fields' vectors depends on the number of fields of your plan)
+  # --------------------------------------------------------------------------------------------- 
   
   energies <- read.csv(energies.csv)
   
