@@ -199,7 +199,7 @@ test_that("--selectRobustnessStructures-- function works correctly", {
   #
   # GIVEN: a robustness datarame (output of "readRobustness") and a vector with structures names
   #   to keep
-  # WHEN: I apply "selectDVHsStructures" function
+  # WHEN: I apply "selectRobustnessStructures" function
   # THEN: the function returns a plan with only the robustness DVHs of the selected structures 
   # ---------------------------------------------------------------------------------------------
   
