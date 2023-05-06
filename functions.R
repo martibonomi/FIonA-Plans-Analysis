@@ -13,7 +13,7 @@ library(covr)
 library(testthat)
 
 
-readDVHs <- function(dvhs.csv, structures.names = NA){
+readDVHs <- function(dvhs.csv, renamed.structures = NA){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
@@ -22,7 +22,7 @@ readDVHs <- function(dvhs.csv, structures.names = NA){
   # ---------------------------------------------------------------------------------------------
   # Parameters:
   # dvhs.csv -> csv file output from FIonA from DVHs visualization
-  # structures.names [chr] -> vector with new structures' names, only if you want to rename 
+  # renamed.structures [chr] -> vector with new structures' names, only if you want to rename 
   #   them; default is NA
   # --------------------------------------------------------------------------------------------- 
   # Returns:
@@ -34,8 +34,8 @@ readDVHs <- function(dvhs.csv, structures.names = NA){
   colnames(dvhs)[1] <- "Dose"
   
   # renaming structures
-  if(all(!is.na(structures.names))){
-    for (structure in structures.names) {
+  if(all(!is.na(renamed.structures))){
+    for (structure in renamed.structures) {
       curr.structure.idx <- which(str_detect(tolower(colnames(dvhs)), tolower(structure)))
       colnames(dvhs)[curr.structure.idx] <- structure
     }
