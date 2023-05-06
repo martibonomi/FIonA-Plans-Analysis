@@ -36,6 +36,7 @@ test_that("--readDVHs-- function returns correct output for default settings", {
   
 })
 
+
 test_that("--readDVHs-- function correctly renames structures when renamed.structures is not NA", {
   
   # ---------------------------------------------------------------------------------------------
@@ -141,35 +142,69 @@ test_that("--plotDVHs-- function assigns the correct title when title = 'title' 
 })
 
 
-test_that("--plotComparePlansDVHs-- function works correclty", {
+test_that("--plotComparePlansDVHs-- function assigns the correct title when title = TRUE", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function returns a plot with the correct title assigned to the 
-  #   plot 
+  # This test asserts that the function returns a plot with title = "Plan 1 vs. Plan 2" 
+  #   when title = TRUE for Plan 1 and Plan 2 comparison
   #   
   # GIVEN: a plan output from "readDVHs" function
-  # WHEN: I apply "plotComparePlansDVHs" function with title's options
-  # THEN: the function correctly assigns the title chosen for the plot
+  # WHEN: I apply "plotComparePlansDVHs" function with title = TRUE
+  # THEN: the function correctly assigns the expected title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_plan1 <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  test_plan2 <- readDVHs(dvhs.csv = test_dvhs_comparison.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  
+  test_plan1 <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
+  test_plan2 <- readDVHs(dvhs.csv = "test_data/dvhs_comparison.csv")
   test_plans <- list("Plan 1" = test_plan1, "Plan 2" = test_plan2)
-  
-  # test with title = TRUE
   test_plot <- plotComparePlansDVHs(plans = test_plans, title = TRUE)
+  
   expected.title <- "Plan 1 vs. Plan 2"
   actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
-  # test with title = FALSE
+})
+
+
+test_that("--plotComparePlansDVHs-- function assigns the correct title when title = FALSE", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a plot with no title when title = FALSE for 
+  #   Plan 1 and Plan 2 comparison
+  #   
+  # GIVEN: a plan output from "readDVHs" function
+  # WHEN: I apply "plotComparePlansDVHs" function with title = FALSE
+  # THEN: the function returns a plot with no title
+  # ---------------------------------------------------------------------------------------------
+  
+  test_plan1 <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
+  test_plan2 <- readDVHs(dvhs.csv = "test_data/dvhs_comparison.csv")
+  test_plans <- list("Plan 1" = test_plan1, "Plan 2" = test_plan2)
+  test_plot <- plotComparePlansDVHs(plans = test_plans, title = TRUE)
+  
   test_plot <- plotComparePlansDVHs(plans = test_plans, title = FALSE)
   expected.title <- NULL
   actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
-  # test with title = "test title"
+})
+
+
+test_that("--plotComparePlansDVHs-- function assigns the correct title when title = 'title' ", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a plot with title = "title" for Plan 1 and Plan 2
+  #   comparison
+  #   
+  # GIVEN: a plan output from "readDVHs" function
+  # WHEN: I apply "plotComparePlansDVHs" function with title = "title"
+  # THEN: the function correctly assigns the specified title to the plot
+  # ---------------------------------------------------------------------------------------------
+  
+  test_plan1 <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
+  test_plan2 <- readDVHs(dvhs.csv = "test_data/dvhs_comparison.csv")
+  test_plans <- list("Plan 1" = test_plan1, "Plan 2" = test_plan2)
+  test_plot <- plotComparePlansDVHs(plans = test_plans, title = TRUE)
+  
   test_plot <- plotComparePlansDVHs(plans = test_plans, title = "test title")
   expected.title <- "test title"
   actual.title <- test_plot[["labels"]][["title"]]
