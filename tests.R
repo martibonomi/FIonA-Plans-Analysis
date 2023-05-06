@@ -37,14 +37,14 @@ test_that("--readDVHs-- function returns correct output for default settings", {
 })
 
 
-test_that("--readDVHs-- function correctly renames structures when renamed.structures is not NA", {
+test_that("--readDVHs-- function correctly renames structures when renamed.structures is given", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function correctly renames structures when new names are assigned
-  #   to renamed.structures in input
+  # This test asserts that the function correctly renames structures when renamed.structures is 
+  #   given in input
   #
   # GIVEN: a csv file output from the FIonA treatment planning system
-  # WHEN: I apply "readDVHs" function assigning new structures names to renamed.structures in input
+  # WHEN: I apply "readDVHs" function giving renamed.structures in input to the function
   # THEN: the function correctly renames the structures of my plan with names stored in 
   #   renamed.structures
   # ---------------------------------------------------------------------------------------------
