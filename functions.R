@@ -22,9 +22,8 @@ readDVHs <- function(dvhs.csv, structures.names = NA){
   # ---------------------------------------------------------------------------------------------
   # Parameters:
   # dvhs.csv -> csv file output from FIonA from DVHs visualization
-  # rename.structures [logical] -> TRUE if you want to change the structures' names from FIonA,
-  #   FALSE if you want to keep FIonA's names
-  # structures.names [chr] -> vector with new structures' names, only if rename.structures = TRUE
+  # structures.names [chr] -> vector with new structures' names, only if you want to rename 
+  #   them; default is NA
   # --------------------------------------------------------------------------------------------- 
   # Returns:
   # A list with two elements: a dataframe called "DVHs" with the DVHs for each structure and 
