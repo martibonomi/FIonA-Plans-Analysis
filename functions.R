@@ -13,7 +13,7 @@ library(covr)
 library(testthat)
 
 
-readDVHs <- function(dvhs.csv, rename.structures = FALSE, structures.names = NA){
+readDVHs <- function(dvhs.csv, structures.names = NA){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
@@ -35,9 +35,9 @@ readDVHs <- function(dvhs.csv, rename.structures = FALSE, structures.names = NA)
   colnames(dvhs)[1] <- "Dose"
   
   # renaming structures
-  if(rename.structures == TRUE){
+  if(all(!is.na(structures.names))){
     for (structure in structures.names) {
-      curr.structure.idx <- which(str_detect(colnames(dvhs), regex(structure, ignore_case = TRUE)))
+      curr.structure.idx <- which(str_detect(tolower(colnames(dvhs)), tolower(structure)))
       colnames(dvhs)[curr.structure.idx] <- structure
     }
   }
