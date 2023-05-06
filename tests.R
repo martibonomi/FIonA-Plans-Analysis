@@ -9,11 +9,12 @@
 source("functions.R")
 
 
-test_that("--readDVHs-- function works correctly for default settings", {
+test_that("--readDVHs-- function returns correct output for default settings", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function "readDVHs" with default values gives a list with two 
-  #   dataframes: "DVHs" with plan's DVHs and "Volumes [cc]" with structures' volumes
+  # This test asserts that the function "readDVHs" with default values returns correct output:
+  #   a list with two dataframes, i.e. "DVHs" with plan's DVHs and "Volumes [cc]" with structures' 
+  #   volumes
   #
   # GIVEN: a csv file output from the FIonA treatment planning system
   # WHEN: I apply "readDVHs" function with default values (renamed.structures = NA)
@@ -35,20 +36,19 @@ test_that("--readDVHs-- function works correctly for default settings", {
   
 })
 
-test_that("--readDVHs-- function correctly renames structures when renamed.structures != NA", {
+test_that("--readDVHs-- function correctly renames structures when renamed.structures is not NA", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function renames correctly structures with the new names provided
-  #   in input in renamed.structures
+  # This test asserts that the function correctly renames structures when new names are assigned
+  #   to renamed.structures in input
   #
   # GIVEN: a csv file output from the FIonA treatment planning system
-  # WHEN: I apply "readDVHs" function providing renamed.structures vector
+  # WHEN: I apply "readDVHs" function assigning new structures names to renamed.structures in input
   # THEN: the function correctly renames the structures of my plan with names stored in 
   #   renamed.structures
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("Esophagus", "CTV", "Medulla", "Lungs", "Heart", "PTV")
-  
   test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, renamed.structures = new.names)
   
   expect_true(all(colnames(test_plan$DVHs)[-1] %in% new.names))
