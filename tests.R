@@ -213,20 +213,18 @@ test_that("--plotComparePlansDVHs-- function assigns the correct title when titl
 })
 
 
-test_that("--readRobustness-- function works correclty", {
+test_that("--readRobustness-- function correctly re-enumerates the columns of input data for default values", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function correctly re-enumerates the columns for each geometrical
-  #   shift of the .csv file output from the robustness calculation 
+  #   shift of the csv file output from FIonA from the robustness calculation
   #   
   # GIVEN: a csv file output from FIonA's robustness calculation
-  # WHEN: I apply "readRobustness" function
-  # THEN: the function correctly re-enumerates the columns for geometrical shifts and renames
-  #   structures if rename.structures = TRUE
+  # WHEN: I apply "readRobustness" function with default values
+  # THEN: the function correctly re-enumerates the columns for geometrical shifts 
   # ---------------------------------------------------------------------------------------------
-  
-  # test with default options
-  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = FALSE)
+
+  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = NA)
   
   structures.names <- c("DIBH_Esophagus", "DIBH_CTV_bridge", "DIBH_Medulla", "Lungs", "DIBH_Heart", "DIBH_PTV_bridge")
   expected.colnames <- paste0(rep(structures.names, each = 9), "_", 1:9)
@@ -235,10 +233,25 @@ test_that("--readRobustness-- function works correclty", {
   expect_equal(actual.colnames, expected.colnames)
   expect_equal(sum(is.na(test_robustness)), 0)
   
-  # test with renamed structures
-  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+})
+
+
+test_that("--readRobustness-- function correctly re-enumerates the columns of input data with new structures names", {
   
-  structures.names <- renamed.structures
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function correctly re-enumerates the columns for each geometrical
+  #   shift of the csv file output from FIonA from the robustness calculation when 
+  #   renamed.structures vector is given in input
+  #   
+  # GIVEN: a csv file output from FIonA's robustness calculation
+  # WHEN: I apply "readRobustness" function giving renamed.structures vector in input
+  # THEN: the function correctly re-enumerates column with new structures names
+  # ---------------------------------------------------------------------------------------------
+  
+  new.names <- c("Esophagus", "CTV", "Medulla", "Lungs", "Heart", "PTV")
+  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  
+  structures.names <- new.names
   expected.colnames <- paste0(rep(structures.names, each = 9), "_", 1:9)
   actual.colnames <- colnames(test_robustness)[-1]
   
