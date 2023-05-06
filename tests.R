@@ -8,16 +8,6 @@
 # uplaod functions to test
 source("functions.R")
 
-# test data
-test_dvhs.csv <- "test_data/dvhs.csv"
-test_dvhs_comparison.csv <- "test_data/dvhs_comparison.csv"
-test_robustness.csv <- "test_data/robustness_dvhs.csv"
-test_energies.csv <- "test_data/energies.csv"
-
-# parameters
-renamed.structures <- c("Esophagus", "CTV", "Medulla", "Lungs", "Heart", "PTV")
-structures.to.keep <- c("CTV", "PTV")
-
 
 test_that("--readDVHs-- function works correctly for default settings", {
   
