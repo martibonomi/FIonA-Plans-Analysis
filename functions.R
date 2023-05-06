@@ -199,7 +199,7 @@ plotComparePlansDVHs <- function(plans, title = TRUE){
 }
 
 
-readRobustness <- function(robustness.csv, rename.structures = FALSE, structures.names = NA){
+readRobustness <- function(robustness.csv, renamed.structures = NA){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
@@ -208,9 +208,8 @@ readRobustness <- function(robustness.csv, rename.structures = FALSE, structures
   # ---------------------------------------------------------------------------------------------
   # Parameters:
   # robustness.csv -> csv fie output from FIonA from robustness calculation
-  # rename.structures [logical] -> TRUE if you want to change the structures names from FIonA,
-  #   FALSE if you want to keep FIonA's names
-  # structures.names [chr] -> vector with new structures names, only if rename.structures = TRUE
+  # renamed.structures [chr] -> vector with new structures' names, only if you want to rename 
+  #   them; default is NA
   # ---------------------------------------------------------------------------------------------
   # Returns:
   # A dataframe with the robustness curves re-enumerated from 1 to 9 for each structure and 
@@ -220,33 +219,23 @@ readRobustness <- function(robustness.csv, rename.structures = FALSE, structures
   robustness <- read.csv(robustness.csv)
   colnames(robustness)[1] <- "Dose"
   
-  # renaming structures and re-enumerating curves
-  if(rename.structures == TRUE){
-    for(i in 1:length(structures.names)){
-      curr.idxs <- which(str_detect(colnames(robustness), regex(structures.names[i], ignore_case = TRUE)))
-      for(j in 1:length(curr.idxs)){
-        colnames(robustness)[curr.idxs[j]] <- paste(structures.names[i], j, sep = "_")
-      }
+  # get unique names for structures
+  structures.names <- unique(sapply(str_split(colnames(robustness)[-1], "[.]"), "[[", 1))
+  
+  # rename structures
+  if(all(!is.na(renamed.structures))){
+    for (structure in renamed.structures) {
+      curr.structure.idx <- which(str_detect(tolower(structures.names), tolower(structure)))
+      structures.names <- gsub(structures.names[curr.structure.idx], structure, structures.names)
     }
-  } else {
-    
-    # get unique original names for structures
-    orig.structures.names <- colnames(robustness)[-1]
-    list.structures.names <- str_split(orig.structures.names, pattern = "[.]")
-    structures.names <- c()
-    for(i in 1:length(list.structures.names)){
-      structures.names[i] <- list.structures.names[[i]][1]
+  }
+  
+  # re-enumerating curves
+  for(i in 1:length(structures.names)){
+    curr.idxs <- which(str_detect(colnames(robustness), structures.names[i]))
+    for(j in 1:length(curr.idxs)){
+      colnames(robustness)[curr.idxs[j]] <- paste(structures.names[i], j, sep = "_")
     }
-    structures.names <- unique(structures.names)
-    
-    # re-enumerating curves
-    for(i in 1:length(structures.names)){
-      curr.idxs <- which(str_detect(colnames(robustness), structures.names[i]))
-      for(j in 1:length(curr.idxs)){
-        colnames(robustness)[curr.idxs[j]] <- paste(structures.names[i], j, sep = "_")
-      }
-    }
-    
   }
   
   robustness[is.na(robustness)] <- 0
