@@ -57,7 +57,7 @@ test_that("--readDVHs-- function correctly renames structures when renamed.struc
 })
 
 
-test_that("--selectDVHsStructures-- function works correctly", {
+test_that("--selectDVHsStructures-- function returns the correct output", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function keeps only the DVHs and volumes of the selected structures
@@ -67,7 +67,10 @@ test_that("--selectDVHsStructures-- function works correctly", {
   # THEN: the function returns a plan with only the DVHs and volumes of the selected structures 
   # ---------------------------------------------------------------------------------------------
   
-  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv", renamed.structures = new.names)
+  
+  structures.to.keep <- c("CTV", "PTV", "Lungs")
   filtered.test_plan <- selectDVHsStructures(test_plan, keep.structures = structures.to.keep)
   
   expect_equal(colnames(filtered.test_plan[["DVHs"]])[-1], structures.to.keep)
