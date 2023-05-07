@@ -24,15 +24,21 @@ test_that("--readDVHs-- function returns correct output for default settings", {
   
   test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv", renamed.structures = NA)
   
-  expect_true(is.list(test_plan))
-  expect_equal(length(test_plan), 2)
-  expect_equal(names(test_plan), c("DVHs", "Volumes [cc]"))
-  
-  expect_true(is.data.frame(test_plan$DVHs))
-  expect_equal(length(test_plan$DVHs), 6 + 1) # number of structures + dose
-  
-  expect_true(is.data.frame(test_plan$`Volumes [cc]`))
-  expect_equal(length(test_plan$`Volumes [cc]`), 6)
+  expected.output <- list("DVHs" = data.frame("Dose" = c(0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110),
+                                              "DIBH_CTV_bridge" = c(100, 100, 100, 100, 100, 100, 100, 100, 99.998, 99.689, 57.720, 0),
+                                              "DIBH_PTV_bridge" = c(100, 100, 100, 100, 100, 100, 100, 100, 99.851, 98.565, 54.177, 0),
+                                              "DIBH_Esophagus" = c(100, 36.817, 33.429, 31.142, 29.159, 27.105, 24.360, 21.139, 17.697, 13.785, 2.358, 0),
+                                              "DIBH_Heart" = c(100, 5.242, 3.370, 2.325, 1.649, 1.165, 0.797, 0.524, 0.302, 0.120, 0.001, 0),
+                                              "DIBH_Medulla" = c(100, 38.491, 35.306, 23.373, 19.125, 13.908, 8.062, 0.995, 0, 0, 0, 0),
+                                              "Lungs" = c(100, 24.555, 21.733, 19.904, 18.800, 17.663, 16.343, 14.646, 12.780, 10.481, 3.898, 0)),
+                          "Volumes [cc]" = data.frame("DIBH_CTV_bridge" = c("Vol" = 377.402),
+                                                      "DIBH_PTV_bridge" = c("Vol" = 578.878),
+                                                      "DIBH_Esophagus" = c("Vol" = 31.822),
+                                                      "DIBH_Heart" = c("Vol" = 441.778),
+                                                      "DIBH_Medulla" = c("Vol" = 36.214),
+                                                      "Lungs" = c("Vol" = 4081.253)))
+
+  expect_equal(expected.output, test_plan)
   
 })
 
