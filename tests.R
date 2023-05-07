@@ -76,13 +76,18 @@ test_that("--selectDVHsStructures-- function returns the correct output", {
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
-  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv", renamed.structures = new.names)
+  test_plan <- readDVHs(dvhs.csv = "test_data/test_readDVHs.csv", renamed.structures = new.names)
   
-  structures.to.keep <- c("CTV", "PTV", "Lungs")
+  structures.to.keep <- c("CTV", "Lungs")
   filtered.test_plan <- selectDVHsStructures(test_plan, keep.structures = structures.to.keep)
   
-  expect_equal(colnames(filtered.test_plan[["DVHs"]])[-1], structures.to.keep)
-  expect_equal(colnames(filtered.test_plan[["Volumes [cc]"]]), structures.to.keep)
+  expected.output <- list("DVHs" = data.frame("Dose" = c(0, 20, 40, 60, 80, 100),
+                                              "CTV" = c(100, 100, 100, 100, 99.998, 57.720),
+                                              "Lungs" = c(100, 21.733, 18.800, 16.343, 12.780, 3.898)),
+                          "Volumes [cc]" = data.frame("CTV" = c("Vol" = 377.402),
+                                                      "Lungs" = c("Vol" = 4081.253)))
+  
+  expect_equal(filtered.test_plan, expected.output)
   
 })
 
