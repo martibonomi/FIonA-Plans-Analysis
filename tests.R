@@ -540,22 +540,25 @@ test_that("--getStructureRobustness-- function works correcly",{
 })
 
 
-test_that("--getEnergies-- function works correctly", {
+test_that("--getEnergies-- function returns a list with expected values", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function returns a list with the total energies used and the 
-  #   energies for each field
+  # This test asserts that the function returns a list with the sorted total energies used and the 
+  #   sorted energies for each field
   #
   # GIVEN: a csv file with energy values and spots' weights output from FIonA
   # WHEN: I apply "getEnergies" function
-  # THEN: the function returns a list with the total energies used and the energies for each 
-  #   field of the plan
+  # THEN: the function returns a list with the sorted total energies used and the sorted energies 
+  #   for each field of the plan
   # ---------------------------------------------------------------------------------------------
   
-  test_energies <- getEnergies(energies.csv = test_energies.csv)
+  test_energies <- getEnergies(energies.csv = "test_data/energies.csv")
   
-  expect_true(typeof(test_energies) == "list")
-  expect_equal(length(test_energies), 4)
-  expect_equal(names(test_energies), c("Total energies", "F0", "F1", "F2"))
+  expected.output <- list("Total energies" = c(78.769, 80.970, 85.241, 89.352, 99.047, 106.304, 109.793, 150.621),
+                          "F0" = c(89.352, 106.304),
+                          "F1" = c(78.769, 85.241),
+                          "F2" = c(80.970, 99.047, 109.793, 150.621))
+  
+  expect_equal(test_energies, expected.output)
   
 })
