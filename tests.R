@@ -261,7 +261,7 @@ test_that("--readRobustness-- function correctly re-enumerates the columns of in
 })
 
 
-test_that("--selectRobustnessStructures-- function works correctly", {
+test_that("--selectRobustnessStructures-- function returns the correct output", {
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function keeps only the robustness DVHs of the selected structures
@@ -269,10 +269,14 @@ test_that("--selectRobustnessStructures-- function works correctly", {
   # GIVEN: a robustness datarame (output of "readRobustness") and a vector with structures names
   #   to keep
   # WHEN: I apply "selectRobustnessStructures" function
-  # THEN: the function returns a plan with only the robustness DVHs of the selected structures 
+  # THEN: the function returns a robustness dataframe with only the robustness DVHs of the 
+  #   selected structures 
   # ---------------------------------------------------------------------------------------------
   
-  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  new.names <- c("CTV", "Esophagus")
+  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  
+  structures.to.keep <- c("CTV")
   filtered.test_robustness <- selectRobustnessStructures(robustness = test_robustness, keep.structures = structures.to.keep)
   
   expected.colnames <- paste0(rep(structures.to.keep, each = 9), "_", 1:9)
