@@ -44,6 +44,7 @@ readDVHs <- function(dvhs.csv, renamed.structures = NA){
   # create dataframe with structures volumes [cc] from last row of plan
   vol.cc <- tail(dvhs, n = 1)
   vol.cc <- vol.cc[2:length(dvhs)]
+  rownames(vol.cc) <- "Vol"
   
   # keep only dvhs dataframe
   dvhs <- dvhs[1:nrow(dvhs)-1,]
