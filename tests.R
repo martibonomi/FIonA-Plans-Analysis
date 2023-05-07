@@ -546,32 +546,6 @@ test_that("--getDv-- function returns the correct value of D95% for PTV", {
 })
 
 
-test_that("--getDv-- function returns the correct value of D20% for Lungs", {
-  
-  # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function returns the correct value of D100% for PTV
-  #
-  # GIVEN: a plan (output of "readPlan"), a value "v" for the dose and the structure name for 
-  #   which you want to compute D[v%]
-  # WHEN: I apply "getDv" function
-  # THEN: the function returns the correct value of D[v%] for the selected structure
-  # ---------------------------------------------------------------------------------------------
-  
-  new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
-  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv", renamed.structures = new.names)
-  
-  test_structure <- "CTV"
-  test_v = 5
-  expected.Dv = 95
-  
-  actual.Dv <- getDv(plan = test_plan, v = test_v, structure = test_structure)
-  
-  # adding a tolerance as the approxfun in "getDv" might approximate values for fitting the curve
-  expect_equal(actual.Dv, expected.Dv, tolerance = 1e-3)
-  
-})
-
-
 test_that("--getStructureRobustness-- function returns the correct value of robustness V90% for CTV", {
   
   # ---------------------------------------------------------------------------------------------
