@@ -371,16 +371,16 @@ test_that("--findRobustnessSpread-- function correctly finds maxima and minima",
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "Esophagus")
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  test_robustness <- readRobustness(robustness = "test_data/test_findRobustnessSpread.csv", renamed.structures = new.names)
   test_spread <- findRobustnessSpread(test_robustness)
   
-  expected.dataframe <- data.frame("Dose" = seq(0, 110, by = 10),
-                                   "CTV_nom" = c(100, 100, 100, 100, 100, 100, 100, 100, 99.998, 99.778, 65.999, 0),
-                                   "CTV_max" = c(100, 100, 100, 100, 100, 100, 100, 100, 99.999, 99.778, 65.999, 0.002),
-                                   "CTV_min" = c(100, 100, 100, 100, 100, 100, 100, 99.982, 99.766, 98.363, 62.331, 0),
-                                   "Esophagus_nom" = c(49.158, 36.792, 33.521, 31.280, 29.369, 27.542, 24.972, 21.616, 18.070, 14.181, 3.235, 0),
-                                   "Esophagus_max" = c(49.763, 37.787, 34.444, 32.227, 30.286, 28.345, 25.816, 22.497, 18.992, 14.744, 5.081, 0),
-                                   "Esophagus_min" = c(48.367, 35.882, 32.521, 30.238, 28.201, 26.314, 23.653, 19.927, 16.260, 11.965, 1.809, 0))
+  expected.dataframe <- data.frame("Dose" = c(0, 20, 40, 60 ,80, 100),
+                                   "CTV_nom" = c(100, 100, 100, 100, 99.998, 65.999),
+                                   "CTV_max" = c(100, 100, 100, 100, 99.999, 65.999),
+                                   "CTV_min" = c(100, 100, 100, 100, 99.766, 62.331),
+                                   "Esophagus_nom" = c(49.158, 33.521, 29.369, 24.972, 18.070, 3.235),
+                                   "Esophagus_max" = c(49.763, 34.444, 30.286, 25.816, 18.992, 5.081),
+                                   "Esophagus_min" = c(48.367, 32.521, 28.201, 23.653, 16.260, 1.809))
   
   expect_equal(test_spread, expected.dataframe)
   
