@@ -377,34 +377,60 @@ test_that("--findRobustnessSpread-- function correctly finds maxima and minima",
 })
 
 
-test_that("--plotRobustnessSpread-- function works correctly", {  
+test_that("--plotRobustnessSpread-- function assigns the correct title when title = TRUE", {  
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function returns a plot with the correct title assigned to the 
-  #   plot 
+  # This test asserts that the function returns a plot with title = "Robustness spread for plan 
+  #   test rob" when title = TRUE
   #   
   # GIVEN: a plan output from "readRobustness" function
-  # WHEN: I apply "plotRobustnessSpread" function with title's options
-  # THEN: the function correctly assigns the title chosen for the plot
+  # WHEN: I apply "plotRobustnessSpread" function with title = TRUE
+  # THEN: the function correctly assigns the expected title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
-  test_spread <- findRobustnessSpread(robustness = test_robustness)
-  
-  # test with title = TRUE
+  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv")
   test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test rob", title = TRUE)
+  
   expected.title <- "Robustness spread for plan test rob"
   actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
-  # test with title = FALSE
-  test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test plan", title = FALSE)
+})
+  
+
+test_that("--plotRobustnessSpread-- function assigns the correct title when title = FALSE", {  
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a plot with no title when title = FALSE
+  #   
+  # GIVEN: a plan output from "readRobustness" function
+  # WHEN: I apply "plotRobustnessSpread" function with title = FALSE
+  # THEN: the function returns a plot with no title
+  # ---------------------------------------------------------------------------------------------
+  
+  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv")
+  test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test rob", title = FALSE)
+  
   expected.title <- NULL
   actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
   
-  # test with title = "test title"
-  test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test plan", title = "test title")
+})
+
+
+test_that("--plotRobustnessSpread-- function assigns the correct title when title = 'title' ", {  
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns a plot with title = "title" when title = "title"
+  #   
+  # GIVEN: a plan output from "readRobustness" function
+  # WHEN: I apply "plotRobustnessSpread" function with title = "title"
+  # THEN: the function correctly assigns the specified title to the plot
+  # ---------------------------------------------------------------------------------------------
+  
+  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv")
+  test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test rob", title = "test title")
+  
   expected.title <- "test title"
   actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
