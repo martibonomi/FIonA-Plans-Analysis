@@ -514,25 +514,53 @@ test_that("--getDv-- function works correctly", {
 })
 
 
-test_that("--getStructureRobustness-- function works correcly",{
+test_that("--getStructureRobustness-- function returns the correct value of robustness V90% for CTV", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function returns the correct value of robustness for the worst 
-  #   case scenario of the selected structure
+  # This test asserts that the function returns the correct value for V90% of robustness in 
+  #   the worst case scenario for CTV
   #
-  # GIVEN: a datframe of structures' robustness dvhs (output of "readRobustness), a value for
+  # GIVEN: a dataframe of structures' robustness dvhs (output of "readRobustness), a value for
   #   the dose and the name of a structure for which you want to calculate robustness
   # WHEN: I apply "getStructureRobustness" function
   # THEN: the function returns the correct value of V[d%] of robustness dvhs for the worst case
   #   scenario of the selected structure
   # ---------------------------------------------------------------------------------------------
   
-  # expected value
-  test_structure <- "CTV"
-  test_dose = 95
-  expected.rob <- 95.859
+  new.names <- c("CTV", "Esophagus")
+  robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
   
-  robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  test_structure <- "CTV"
+  test_dose = 90
+  expected.rob <- 98.363
+  
+  actual.rob <- getStructureRobustness(robustness, dose = test_dose, structure = test_structure)
+  
+  expect_equal(actual.rob, expected.rob)
+  
+})
+
+
+test_that("--getStructureRobustness-- function returns the correct value of robustness V20% for Esophagus", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns the correct value for V80% of robustness in 
+  #   the worst case scenario for Esophagus
+  #
+  # GIVEN: a dataframe of structures' robustness dvhs (output of "readRobustness), a value for
+  #   the dose and the name of a structure for which you want to calculate robustness
+  # WHEN: I apply "getStructureRobustness" function
+  # THEN: the function returns the correct value of V[d%] of robustness dvhs for the worst case
+  #   scenario of the selected structure
+  # ---------------------------------------------------------------------------------------------
+  
+  new.names <- c("CTV", "Esophagus")
+  robustness <- readRobustness(robustness.csv = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  
+  test_structure <- "Esophagus"
+  test_dose = 20
+  expected.rob <- 32.521
+  
   actual.rob <- getStructureRobustness(robustness, dose = test_dose, structure = test_structure)
   
   expect_equal(actual.rob, expected.rob)
