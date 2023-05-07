@@ -248,7 +248,7 @@ test_that("--readRobustness-- function correctly re-enumerates the columns of in
   # THEN: the function correctly re-enumerates column with new structures names
   # ---------------------------------------------------------------------------------------------
   
-  new.names <- c("Esophagus", "CTV", "Medulla", "Lungs", "Heart", "PTV")
+  new.names <- c("CTV", "Lungs")
   test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
   
   structures.names <- new.names
