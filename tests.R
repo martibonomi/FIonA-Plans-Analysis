@@ -438,11 +438,10 @@ test_that("--plotRobustnessSpread-- function assigns the correct title when titl
 })
 
 
-test_that("--getVd-- function works correctly", {
+test_that("--getVd-- function returns the correct value of V90% for CTV", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function returns the correct value for V[d%] for the selected 
-  #   structure
+  # This test asserts that the function returns the correct value for V90% for the CTV
   #
   # GIVEN: a plan (output of "readPlan"), a value "d" for the dose and the structure name for 
   #   which you want to compute V[d%]
@@ -450,12 +449,38 @@ test_that("--getVd-- function works correctly", {
   # THEN: the function returns the correct value of V[d%] for the selected structure
   # ---------------------------------------------------------------------------------------------
   
-  # calculate V95 for CTV
-  test_structure <- "CTV"
-  test_d = 95
-  expected.Vd = 98.644
+  new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv", renamed.structures = new.names)
   
-  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  test_structure <- "CTV"
+  test_d = 90
+  expected.Vd = 99.689
+  
+  actual.Vd <- getVd(plan = test_plan, d = test_d, structure = test_structure) 
+  
+  expect_equal(actual.Vd, expected.Vd)
+  
+})
+
+
+test_that("--getVd-- function returns the correct value of V50 for Esophagus", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns the correct value for V50% for the Esophagus
+  #
+  # GIVEN: a plan (output of "readPlan"), a value "d" for the dose and the structure name for 
+  #   which you want to compute V[d%]
+  # WHEN: I apply "getVd" function
+  # THEN: the function returns the correct value of V[d%] for the selected structure
+  # ---------------------------------------------------------------------------------------------
+  
+  new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv", renamed.structures = new.names)
+  
+  test_structure <- "Esophagus"
+  test_d = 50
+  expected.Vd = 27.105
+  
   actual.Vd <- getVd(plan = test_plan, d = test_d, structure = test_structure) 
   
   expect_equal(actual.Vd, expected.Vd)
