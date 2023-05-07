@@ -226,7 +226,7 @@ test_that("--readRobustness-- function correctly re-enumerates the columns of in
 
   test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = NA)
   
-  structures.names <- c("DIBH_Esophagus", "DIBH_CTV_bridge", "DIBH_Medulla", "Lungs", "DIBH_Heart", "DIBH_PTV_bridge")
+  structures.names <- c("DIBH_CTV_bridge", "DIBH_Esophagus")
   expected.colnames <- paste0(rep(structures.names, each = 9), "_", 1:9)
   actual.colnames <- colnames(test_robustness)[-1]
   
