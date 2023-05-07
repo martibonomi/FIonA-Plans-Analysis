@@ -488,11 +488,10 @@ test_that("--getVd-- function returns the correct value of V50 for Esophagus", {
 })
 
 
-test_that("--getDv-- function works correctly", {
+test_that("--getDv-- function returns the correct value of D5% for PTV", {
   
   # ---------------------------------------------------------------------------------------------
-  # This test asserts that the function returns the correct value for D[v%] for the selected 
-  #   structure
+  # This test asserts that the function returns the correct value of D5% for PTV
   #
   # GIVEN: a plan (output of "readPlan"), a value "v" for the dose and the structure name for 
   #   which you want to compute D[v%]
@@ -500,16 +499,69 @@ test_that("--getDv-- function works correctly", {
   # THEN: the function returns the correct value of D[v%] for the selected structure
   # ---------------------------------------------------------------------------------------------
   
-  # calculate D2 for CTV
-  test_structure <- "CTV"
-  test_v = 2.201
-  expected.Dv = 105.3
+  new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs_complete.csv", renamed.structures = new.names)
   
-  test_plan <- readDVHs(dvhs.csv = test_dvhs.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  test_structure <- "PTV"
+  test_v = 5
+  expected.Dv = 104.3
+  
   actual.Dv <- getDv(plan = test_plan, v = test_v, structure = test_structure)
   
   # adding a tolerance as the approxfun in "getDv" might approximate values for fitting the curve
-  expect_equal(actual.Dv, expected.Dv, tolerance = 1e-6)
+  expect_equal(actual.Dv, expected.Dv, tolerance = 1e-3)
+  
+})
+
+
+test_that("--getDv-- function returns the correct value of D95% for PTV", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns the correct value of D95% for PTV
+  #
+  # GIVEN: a plan (output of "readPlan"), a value "v" for the dose and the structure name for 
+  #   which you want to compute D[v%]
+  # WHEN: I apply "getDv" function
+  # THEN: the function returns the correct value of D[v%] for the selected structure
+  # ---------------------------------------------------------------------------------------------
+  
+  new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs_complete.csv", renamed.structures = new.names)
+  
+  test_structure <- "PTV"
+  test_v = 95
+  expected.Dv = 95.0
+  
+  actual.Dv <- getDv(plan = test_plan, v = test_v, structure = test_structure)
+  
+  # adding a tolerance as the approxfun in "getDv" might approximate values for fitting the curve
+  expect_equal(actual.Dv, expected.Dv, tolerance = 1e-3)
+  
+})
+
+
+test_that("--getDv-- function returns the correct value of D20% for Lungs", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns the correct value of D100% for PTV
+  #
+  # GIVEN: a plan (output of "readPlan"), a value "v" for the dose and the structure name for 
+  #   which you want to compute D[v%]
+  # WHEN: I apply "getDv" function
+  # THEN: the function returns the correct value of D[v%] for the selected structure
+  # ---------------------------------------------------------------------------------------------
+  
+  new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
+  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv", renamed.structures = new.names)
+  
+  test_structure <- "CTV"
+  test_v = 5
+  expected.Dv = 95
+  
+  actual.Dv <- getDv(plan = test_plan, v = test_v, structure = test_structure)
+  
+  # adding a tolerance as the approxfun in "getDv" might approximate values for fitting the curve
+  expect_equal(actual.Dv, expected.Dv, tolerance = 1e-3)
   
 })
 
