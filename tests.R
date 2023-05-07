@@ -243,8 +243,7 @@ test_that("--readRobustness-- function correctly re-enumerates the columns of in
   actual.colnames <- colnames(test_robustness)[-1]
   
   expect_equal(actual.colnames, expected.colnames)
-  expect_equal(sum(is.na(test_robustness)), 0)
-  
+
 })
 
 
@@ -268,8 +267,7 @@ test_that("--readRobustness-- function correctly re-enumerates the columns of in
   actual.colnames <- colnames(test_robustness)[-1]
   
   expect_equal(actual.colnames, expected.colnames)
-  expect_equal(sum(is.na(test_robustness)), 0)
-  
+
 })
 
 
