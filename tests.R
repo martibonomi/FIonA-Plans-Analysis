@@ -348,7 +348,7 @@ test_that("--plotRobustness-- function assigns the correct title when title = 't
 })
 
 
-test_that("--findRobustnessSpread-- function works correctly", {  
+test_that("--findRobustnessSpread-- function correctly finds maxima and minima", {  
   
   # ---------------------------------------------------------------------------------------------
   # This test asserts that the function returns a dataframe with three columns for each 
@@ -360,13 +360,19 @@ test_that("--findRobustnessSpread-- function works correctly", {
   # THEN: the function returns a dataframe with str_nom, str_max and str_min for each structure
   # ---------------------------------------------------------------------------------------------
   
-  test_robustness <- readRobustness(robustness = test_robustness.csv, rename.structures = TRUE, structures.names = renamed.structures)
+  new.names <- c("CTV", "Esophagus")
+  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
   test_spread <- findRobustnessSpread(test_robustness)
   
-  expected.colnames <- paste0(rep(renamed.structures, each = 3), "_", c("nom", "max", "min"))
-  actual.colnames <- colnames(test_spread)[-1]
+  expected.dataframe <- data.frame("Dose" = seq(0, 110, by = 10),
+                                   "CTV_nom" = c(100, 100, 100, 100, 100, 100, 100, 100, 99.998, 99.778, 65.999, 0),
+                                   "CTV_max" = c(100, 100, 100, 100, 100, 100, 100, 100, 99.999, 99.778, 65.999, 0.002),
+                                   "CTV_min" = c(100, 100, 100, 100, 100, 100, 100, 99.982, 99.766, 98.363, 62.331, 0),
+                                   "Esophagus_nom" = c(49.158, 36.792, 33.521, 31.280, 29.369, 27.542, 24.972, 21.616, 18.070, 14.181, 3.235, 0),
+                                   "Esophagus_max" = c(49.763, 37.787, 34.444, 32.227, 30.286, 28.345, 25.816, 22.497, 18.992, 14.744, 5.081, 0),
+                                   "Esophagus_min" = c(48.367, 35.882, 32.521, 30.238, 28.201, 26.314, 23.653, 19.927, 16.260, 11.965, 1.809, 0))
   
-  expect_equal(actual.colnames, expected.colnames)
+  expect_equal(test_spread, expected.dataframe)
   
 })
 
