@@ -23,7 +23,7 @@ readDVHs <- function(dvhs.csv, renamed.structures = NA){
   # Parameters:
   # dvhs.csv -> csv file output from FIonA from DVHs visualization
   # renamed.structures [chr] -> vector with new structures' names, only if you want to rename 
-  #   them; default is NA
+  #   them (default is NA)
   # --------------------------------------------------------------------------------------------- 
   # Returns:
   # A list with two elements: a dataframe called "DVHs" with the DVHs for each structure and 
@@ -210,7 +210,7 @@ readRobustness <- function(robustness.csv, renamed.structures = NA){
   # Parameters:
   # robustness.csv -> csv fie output from FIonA from robustness calculation
   # renamed.structures [chr] -> vector with new structures' names, only if you want to rename 
-  #   them; default is NA
+  #   them (default is NA)
   # ---------------------------------------------------------------------------------------------
   # Returns:
   # A dataframe with the robustness curves re-enumerated from 1 to 9 for each structure and 
@@ -554,7 +554,7 @@ getEnergies <- function(energies.csv){
   # ---------------------------------------------------------------------------------------------
   # Returns:
   # A list with vectors: a vector "Total energies" with the sorted values of the total energy 
-  #   layers, and vectors "FX" with the sorted values of the energy layers for field "FX"
+  #   layers, and vectors "FX" with the sorted values of the energy layers for fields "FX"
   #   (number of fields' vectors depends on the number of fields of your plan)
   # --------------------------------------------------------------------------------------------- 
   
