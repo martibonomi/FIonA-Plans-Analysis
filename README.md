@@ -75,12 +75,6 @@ To test functions, type:
 test_file("tests.R")
 ```
 
-To check for testing coverage, type instead:
-
-```         
-file_coverage(source_files = "functions.R", test_files = "tests.R")
-```
-
 ## Functions Usage and Analysis Workflow
 
 In this section, a description of functions usage and analysis workflow is given.
