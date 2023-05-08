@@ -694,7 +694,7 @@ test_that("--getEnergies-- function returns a list with expected values", {
   #   for each field of the plan
   # ---------------------------------------------------------------------------------------------
   
-  test_energies <- getEnergies(energies.csv = "test_data/energies.csv")
+  test_energies <- getEnergies(energies.csv = "test_data/test_getEnergies.csv")
   
   expected.output <- list("Total energies" = c(78.769, 80.970, 85.241, 89.352, 99.047, 106.304, 109.793, 150.621),
                           "F0" = c(89.352, 106.304),
