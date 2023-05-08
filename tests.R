@@ -615,13 +615,40 @@ test_that("--getStructureRobustness-- function returns the correct value of robu
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "Esophagus")
-  robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
   
   test_structure <- "CTV"
   test_dose = 90
   expected.rob <- 98.363
   
-  actual.rob <- getStructureRobustness(robustness, dose = test_dose, structure = test_structure)
+  actual.rob <- getStructureRobustness(test_robustness, dose = test_dose, structure = test_structure)
+  
+  expect_equal(actual.rob, expected.rob)
+  
+})
+
+
+test_that("--getStructureRobustness-- function returns the correct value of robustness V100% for CTV", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns the correct value for V100% of robustness in 
+  #   the worst case scenario for CTV
+  #
+  # GIVEN: a dataframe of structures' robustness dvhs (output of "readRobustness), a value for
+  #   the dose and the name of a structure for which you want to calculate robustness
+  # WHEN: I apply "getStructureRobustness" function
+  # THEN: the function returns the correct value of V[d%] of robustness dvhs for the worst case
+  #   scenario of the selected structure
+  # ---------------------------------------------------------------------------------------------
+  
+  new.names <- c("CTV", "Esophagus")
+  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  
+  test_structure <- "CTV"
+  test_dose = 100
+  expected.rob <- 62.331
+  
+  actual.rob <- getStructureRobustness(test_robustness, dose = test_dose, structure = test_structure)
   
   expect_equal(actual.rob, expected.rob)
   
@@ -642,13 +669,13 @@ test_that("--getStructureRobustness-- function returns the correct value of robu
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "Esophagus")
-  robustness <- readRobustness(robustness.csv = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  test_robustness <- readRobustness(robustness.csv = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
   
   test_structure <- "Esophagus"
   test_dose = 20
   expected.rob <- 32.521
   
-  actual.rob <- getStructureRobustness(robustness, dose = test_dose, structure = test_structure)
+  actual.rob <- getStructureRobustness(test_robustness, dose = test_dose, structure = test_structure)
   
   expect_equal(actual.rob, expected.rob)
   
