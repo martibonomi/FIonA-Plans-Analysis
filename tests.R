@@ -103,8 +103,8 @@ test_that("--plotDVHs-- function assigns the correct title when title = TRUE", {
   # THEN: the function correctly assigns the expected title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
   test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = TRUE)
+  test_plan <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
   
   expected.title <- "DVHs for plan test plan"
   actual.title <- test_plot[["labels"]][["title"]]
@@ -124,8 +124,8 @@ test_that("--plotDVHs-- function assigns the correct title when title = FALSE", 
   # THEN: the function returns a plot with no title
   # ---------------------------------------------------------------------------------------------
   
-  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
   test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = FALSE)
+  test_plan <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
   
   expected.title <- NULL
   actual.title <- test_plot[["labels"]][["title"]]
@@ -144,8 +144,8 @@ test_that("--plotDVHs-- function assigns the correct title when title = 'title' 
   # THEN: the function correctly assigns the specified title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
   test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = "test title")
+  test_plan <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
 
   expected.title <- "test title"
   actual.title <- test_plot[["labels"]][["title"]]
@@ -165,8 +165,8 @@ test_that("--plotComparePlansDVHs-- function assigns the correct title when titl
   # THEN: the function correctly assigns the expected title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_plan1 <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
-  test_plan2 <- readDVHs(dvhs.csv = "test_data/dvhs_comparison.csv")
+  test_plan1 <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
+  test_plan2 <- readDVHs(dvhs.csv = "test_data/test_plotDVHs_comparison.csv")
   test_plans <- list("Plan 1" = test_plan1, "Plan 2" = test_plan2)
   test_plot <- plotComparePlansDVHs(plans = test_plans, title = TRUE)
   
@@ -188,8 +188,8 @@ test_that("--plotComparePlansDVHs-- function assigns the correct title when titl
   # THEN: the function returns a plot with no title
   # ---------------------------------------------------------------------------------------------
   
-  test_plan1 <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
-  test_plan2 <- readDVHs(dvhs.csv = "test_data/dvhs_comparison.csv")
+  test_plan1 <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
+  test_plan2 <- readDVHs(dvhs.csv = "test_data/test_plotDVHs_comparison.csv")
   test_plans <- list("Plan 1" = test_plan1, "Plan 2" = test_plan2)
   test_plot <- plotComparePlansDVHs(plans = test_plans, title = TRUE)
   
@@ -212,8 +212,8 @@ test_that("--plotComparePlansDVHs-- function assigns the correct title when titl
   # THEN: the function correctly assigns the specified title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_plan1 <- readDVHs(dvhs.csv = "test_data/dvhs.csv")
-  test_plan2 <- readDVHs(dvhs.csv = "test_data/dvhs_comparison.csv")
+  test_plan1 <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
+  test_plan2 <- readDVHs(dvhs.csv = "test_data/test_plotDVHs_comparison.csv")
   test_plans <- list("Plan 1" = test_plan1, "Plan 2" = test_plan2)
   test_plot <- plotComparePlansDVHs(plans = test_plans, title = TRUE)
   
