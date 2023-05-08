@@ -80,7 +80,7 @@ selectDVHsStructures <- function(plan, keep.structures){
 }
 
 
-plotDVHs <- function(plan, plan.name, title = TRUE){
+plotDVHs <- function(plan, title = FALSE, plan.name = NA){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
@@ -90,8 +90,8 @@ plotDVHs <- function(plan, plan.name, title = TRUE){
   # Parameters:
   # plan [list] -> plan for which you want to plot the DVHs, output of "readDVHs" (all structures 
   #   plotted) or output of "selectDVHsStructures" (only selected structures are plotted)
-  # plan.name [chr] <- name of the plan
-  # title [chr or logical] -> title for the plot, either TRUE, FALSE or character
+  # title [chr or logical] -> title for the plot, either TRUE, FALSE or character (default is FALSE)
+  # plan.name [chr] <- name of the plan (only if title = TRUE)
   # ---------------------------------------------------------------------------------------------
   # Returns:
   # A plot with the DVHs of the plan you provided as input
@@ -130,7 +130,7 @@ plotDVHs <- function(plan, plan.name, title = TRUE){
 }
 
 
-plotComparePlansDVHs <- function(plans, title = TRUE){
+plotComparePlansDVHs <- function(plans, title = FALSE){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
@@ -141,7 +141,7 @@ plotComparePlansDVHs <- function(plans, title = TRUE){
   # plans [list] -> list of plans for which you want to plot the DVHs, output of "readDVHs" (all
   #   structures are plotted) or output of "selectDVHsStructures" (only selected structures are 
   #   plotted)
-  # title [chr or logical] -> title for the plot, either TRUE, FALSE or character
+  # title [chr or logical] -> title for the plot, either TRUE, FALSE or character (default is FALSE)
   # ---------------------------------------------------------------------------------------------
   # Returns:
   # A plot with the comparison of DVHs of the plans you provided as input
@@ -274,7 +274,7 @@ selectRobustnessStructures <- function(robustness, keep.structures){
 }
 
 
-plotRobustness <- function(robustness, robustness.name, title = TRUE){
+plotRobustness <- function(robustness, title = FALSE, robustness.name = NA){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
@@ -285,8 +285,9 @@ plotRobustness <- function(robustness, robustness.name, title = TRUE){
   # robustness -> robustness dataframe for which you want to plot the DVHs, output of 
   #   "readRobustness" (all structures plotted) or output of "selectRobustnessStructures"
   #   (only selected structures are plotted)
-  # robustness.name [chr] <- name of the plan for which you calculated the robustness
-  # title [chr or logical] -> title for the plot, either TRUE, FALSE or character
+  # title [chr or logical] -> title for the plot, either TRUE, FALSE or character (default is FALSE)
+  # robustness.name [chr] <- name of the plan for which you calculated the robustness (only if 
+  #   title = TRUE)
   # ---------------------------------------------------------------------------------------------
   # Returns:
   # A plot with the robustness curves of the robustness dataframe you provided as input
@@ -374,7 +375,7 @@ findRobustnessSpread <- function(robustness){
 }
 
 
-plotRobustnessSpread <- function(robustness, robustness.name, title = TRUE){
+plotRobustnessSpread <- function(robustness, title = FALSE, robustness.name = NA){
   
   # ---------------------------------------------------------------------------------------------
   # Function's description:
@@ -385,8 +386,9 @@ plotRobustnessSpread <- function(robustness, robustness.name, title = TRUE){
   # robustness -> robustness dataframe for which you want to plot the spread, output 
   #   of "readRobustness" (all structures plotted) or output of "selectRobustnessStructures"
   #   (only selected structures are plotted)
-  # robustness.name [chr] <- name of the plan for which you calculated the robustness spread
-  # title [chr or logical] -> title for the plot, either TRUE, FALSE or character
+  # title [chr or logical] -> title for the plot, either TRUE, FALSE or character (default is FALSE)
+  # robustness.name [chr] <- name of the plan for which you calculated the robustness spread 
+  #   (only if title = TRUE)
   # ---------------------------------------------------------------------------------------------
   # Returns:
   # A plot with the nominal robustness curve and the robustness best case scenario and robustness 
