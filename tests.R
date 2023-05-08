@@ -535,7 +535,7 @@ test_that("--getDv-- function returns the correct value of D5% for PTV", {
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
-  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs_complete.csv", renamed.structures = new.names)
+  test_plan <- readDVHs(dvhs.csv = "test_data/test_getDv.csv", renamed.structures = new.names)
   
   test_structure <- "PTV"
   test_v = 5
@@ -561,11 +561,37 @@ test_that("--getDv-- function returns the correct value of D95% for PTV", {
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
-  test_plan <- readDVHs(dvhs.csv = "test_data/dvhs_complete.csv", renamed.structures = new.names)
+  test_plan <- readDVHs(dvhs.csv = "test_data/test_getDv.csv", renamed.structures = new.names)
   
   test_structure <- "PTV"
   test_v = 95
   expected.Dv = 95.0
+  
+  actual.Dv <- getDv(plan = test_plan, v = test_v, structure = test_structure)
+  
+  # adding a tolerance as the approxfun in "getDv" might approximate values for fitting the curve
+  expect_equal(actual.Dv, expected.Dv, tolerance = 1e-3)
+  
+})
+
+
+test_that("--getDv-- function returns the correct value of D2% for Esophagus", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function returns the correct value of D95% for PTV
+  #
+  # GIVEN: a plan (output of "readPlan"), a value "v" for the dose and the structure name for 
+  #   which you want to compute D[v%]
+  # WHEN: I apply "getDv" function
+  # THEN: the function returns the correct value of D[v%] for the selected structure
+  # ---------------------------------------------------------------------------------------------
+  
+  new.names <- c("CTV", "PTV", "Esophagus", "Heart", "Medulla", "Lungs")
+  test_plan <- readDVHs(dvhs.csv = "test_data/test_getDv.csv", renamed.structures = new.names)
+  
+  test_structure <- "Esophagus"
+  test_v = 2
+  expected.Dv = 100.3
   
   actual.Dv <- getDv(plan = test_plan, v = test_v, structure = test_structure)
   
