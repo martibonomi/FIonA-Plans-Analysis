@@ -103,8 +103,8 @@ test_that("--plotDVHs-- function assigns the correct title when title = TRUE", {
   # THEN: the function correctly assigns the expected title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = TRUE)
   test_plan <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
+  test_plot <- plotDVHs(plan = test_plan, title = TRUE, plan.name = "test plan")
   
   expected.title <- "DVHs for plan test plan"
   actual.title <- test_plot[["labels"]][["title"]]
@@ -124,8 +124,8 @@ test_that("--plotDVHs-- function assigns the correct title when title = FALSE", 
   # THEN: the function returns a plot with no title
   # ---------------------------------------------------------------------------------------------
   
-  test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = FALSE)
   test_plan <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
+  test_plot <- plotDVHs(plan = test_plan, title = FALSE)
   
   expected.title <- NULL
   actual.title <- test_plot[["labels"]][["title"]]
@@ -144,8 +144,8 @@ test_that("--plotDVHs-- function assigns the correct title when title = 'title' 
   # THEN: the function correctly assigns the specified title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_plot <- plotDVHs(plan = test_plan, plan.name = "test plan", title = "test title")
   test_plan <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
+  test_plot <- plotDVHs(plan = test_plan, title = "test title")
 
   expected.title <- "test title"
   actual.title <- test_plot[["labels"]][["title"]]
@@ -191,9 +191,8 @@ test_that("--plotComparePlansDVHs-- function assigns the correct title when titl
   test_plan1 <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
   test_plan2 <- readDVHs(dvhs.csv = "test_data/test_plotDVHs_comparison.csv")
   test_plans <- list("Plan 1" = test_plan1, "Plan 2" = test_plan2)
-  test_plot <- plotComparePlansDVHs(plans = test_plans, title = TRUE)
-  
   test_plot <- plotComparePlansDVHs(plans = test_plans, title = FALSE)
+  
   expected.title <- NULL
   actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
@@ -215,9 +214,8 @@ test_that("--plotComparePlansDVHs-- function assigns the correct title when titl
   test_plan1 <- readDVHs(dvhs.csv = "test_data/test_plotDVHs.csv")
   test_plan2 <- readDVHs(dvhs.csv = "test_data/test_plotDVHs_comparison.csv")
   test_plans <- list("Plan 1" = test_plan1, "Plan 2" = test_plan2)
-  test_plot <- plotComparePlansDVHs(plans = test_plans, title = TRUE)
-  
   test_plot <- plotComparePlansDVHs(plans = test_plans, title = "test title")
+  
   expected.title <- "test title"
   actual.title <- test_plot[["labels"]][["title"]]
   expect_equal(actual.title, expected.title)
@@ -309,7 +307,7 @@ test_that("--plotRobustness-- function assigns the correct title when title = TR
   # ---------------------------------------------------------------------------------------------
   
   test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
-  test_plot <- plotRobustness(robustness = test_robustness, robustness.name = "test rob", title = TRUE)
+  test_plot <- plotRobustness(robustness = test_robustness, title = TRUE, robustness.name = "test rob")
   
   expected.title <- "Robustness DVHs for plan test rob"
   actual.title <- test_plot[["labels"]][["title"]]
@@ -329,7 +327,7 @@ test_that("--plotRobustness-- function assigns the correct title when title = FA
   # ---------------------------------------------------------------------------------------------
   
   test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
-  test_plot <- plotRobustness(robustness = test_robustness, robustness.name = "test rob", title = FALSE)
+  test_plot <- plotRobustness(robustness = test_robustness, title = FALSE)
   
   expected.title <- NULL
   actual.title <- test_plot[["labels"]][["title"]]
@@ -349,7 +347,7 @@ test_that("--plotRobustness-- function assigns the correct title when title = 't
   # ---------------------------------------------------------------------------------------------
   
   test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
-  test_plot <- plotRobustness(robustness = test_robustness, robustness.name = "test rob", title = "test title")
+  test_plot <- plotRobustness(robustness = test_robustness, title = "test title")
   
   expected.title <- "test title"
   actual.title <- test_plot[["labels"]][["title"]]
@@ -399,7 +397,7 @@ test_that("--plotRobustnessSpread-- function assigns the correct title when titl
   # ---------------------------------------------------------------------------------------------
   
   test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
-  test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test rob", title = TRUE)
+  test_plot <- plotRobustnessSpread(robustness = test_robustness, title = TRUE, robustness.name = "test rob")
   
   expected.title <- "Robustness spread for plan test rob"
   actual.title <- test_plot[["labels"]][["title"]]
@@ -419,7 +417,7 @@ test_that("--plotRobustnessSpread-- function assigns the correct title when titl
   # ---------------------------------------------------------------------------------------------
   
   test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
-  test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test rob", title = FALSE)
+  test_plot <- plotRobustnessSpread(robustness = test_robustness, title = FALSE)
   
   expected.title <- NULL
   actual.title <- test_plot[["labels"]][["title"]]
@@ -439,7 +437,7 @@ test_that("--plotRobustnessSpread-- function assigns the correct title when titl
   # ---------------------------------------------------------------------------------------------
   
   test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
-  test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test rob", title = "test title")
+  test_plot <- plotRobustnessSpread(robustness = test_robustness, title = "test title")
   
   expected.title <- "test title"
   actual.title <- test_plot[["labels"]][["title"]]
