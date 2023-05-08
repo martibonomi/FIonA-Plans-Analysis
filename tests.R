@@ -245,6 +245,24 @@ test_that("--readRobustness-- function correctly re-enumerates the columns of in
 })
 
 
+test_that("--readRobustness-- function re-assigns NAs to 0", {
+  
+  # ---------------------------------------------------------------------------------------------
+  # This test asserts that the function correctly re-assigns NAs values present in original 
+  #   dataframe with 0
+  #   
+  # GIVEN: a csv file output from FIonA's robustness calculation
+  # WHEN: I apply "readRobustness" function with default values
+  # THEN: the function re-assigns NAs values present in original dataframe with 0
+  # ---------------------------------------------------------------------------------------------
+  
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv", renamed.structures = NA)
+  
+  expect_equal(sum(is.na(test_robustness)), 0)
+  
+})
+
+
 test_that("--readRobustness-- function correctly re-enumerates the columns of input data with new structures names", {
   
   # ---------------------------------------------------------------------------------------------
