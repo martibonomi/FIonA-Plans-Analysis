@@ -95,7 +95,7 @@ first upload the csv file output from FIonA using the `readDVHs` function
 my_plan <- readDVHs(dvhs.csv = "path/to/dvhs.csv", renamed.structures = new.names)
 ```
 
-in which you can decide whether to rename or not the names of structures imported in FIonA by setting `rename.structures = new.names` providing a character vector with new names for structures (default values are `rename.structures = NA`);
+in which you can decide whether to rename or not the names of structures imported in FIonA by providing a character vector with new names for structures in `rename.structures = new.names` (default value is `rename.structures = NA` if you don't want to rename);
 
 then you can plot the DVHs of your plan by using the `plotDVHs` function
 
