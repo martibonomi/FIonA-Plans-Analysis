@@ -236,7 +236,7 @@ test_that("--readRobustness-- function correctly re-enumerates the columns of in
   # THEN: the function correctly re-enumerates the columns for geometrical shifts 
   # ---------------------------------------------------------------------------------------------
 
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = NA)
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv", renamed.structures = NA)
   
   structures.names <- c("DIBH_CTV_bridge", "DIBH_Esophagus")
   expected.colnames <- paste0(rep(structures.names, each = 9), "_", 1:9)
@@ -260,7 +260,7 @@ test_that("--readRobustness-- function correctly re-enumerates the columns of in
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "Esophagus")
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv", renamed.structures = new.names)
   
   structures.names <- new.names
   expected.colnames <- paste0(rep(structures.names, each = 9), "_", 1:9)
@@ -284,7 +284,7 @@ test_that("--selectRobustnessStructures-- function returns the correct output", 
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "Esophagus")
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv", renamed.structures = new.names)
   
   structures.to.keep <- c("CTV")
   filtered.test_robustness <- selectRobustnessStructures(robustness = test_robustness, keep.structures = structures.to.keep)
@@ -308,7 +308,7 @@ test_that("--plotRobustness-- function assigns the correct title when title = TR
   # THEN: the function correctly assigns the expected title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv")
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
   test_plot <- plotRobustness(robustness = test_robustness, robustness.name = "test rob", title = TRUE)
   
   expected.title <- "Robustness DVHs for plan test rob"
@@ -328,7 +328,7 @@ test_that("--plotRobustness-- function assigns the correct title when title = FA
   # THEN: the function returns a plot with no title
   # ---------------------------------------------------------------------------------------------
   
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv")
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
   test_plot <- plotRobustness(robustness = test_robustness, robustness.name = "test rob", title = FALSE)
   
   expected.title <- NULL
@@ -348,7 +348,7 @@ test_that("--plotRobustness-- function assigns the correct title when title = 't
   # THEN: the function correctly assigns the specified title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv")
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
   test_plot <- plotRobustness(robustness = test_robustness, robustness.name = "test rob", title = "test title")
   
   expected.title <- "test title"
@@ -398,7 +398,7 @@ test_that("--plotRobustnessSpread-- function assigns the correct title when titl
   # THEN: the function correctly assigns the expected title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv")
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
   test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test rob", title = TRUE)
   
   expected.title <- "Robustness spread for plan test rob"
@@ -418,7 +418,7 @@ test_that("--plotRobustnessSpread-- function assigns the correct title when titl
   # THEN: the function returns a plot with no title
   # ---------------------------------------------------------------------------------------------
   
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv")
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
   test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test rob", title = FALSE)
   
   expected.title <- NULL
@@ -438,7 +438,7 @@ test_that("--plotRobustnessSpread-- function assigns the correct title when titl
   # THEN: the function correctly assigns the specified title to the plot
   # ---------------------------------------------------------------------------------------------
   
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv")
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv")
   test_plot <- plotRobustnessSpread(robustness = test_robustness, robustness.name = "test rob", title = "test title")
   
   expected.title <- "test title"
@@ -615,7 +615,7 @@ test_that("--getStructureRobustness-- function returns the correct value of robu
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "Esophagus")
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv", renamed.structures = new.names)
   
   test_structure <- "CTV"
   test_dose = 90
@@ -642,7 +642,7 @@ test_that("--getStructureRobustness-- function returns the correct value of robu
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "Esophagus")
-  test_robustness <- readRobustness(robustness = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  test_robustness <- readRobustness(robustness = "test_data/test_robustness.csv", renamed.structures = new.names)
   
   test_structure <- "CTV"
   test_dose = 100
@@ -669,7 +669,7 @@ test_that("--getStructureRobustness-- function returns the correct value of robu
   # ---------------------------------------------------------------------------------------------
   
   new.names <- c("CTV", "Esophagus")
-  test_robustness <- readRobustness(robustness.csv = "test_data/robustness_dvhs.csv", renamed.structures = new.names)
+  test_robustness <- readRobustness(robustness.csv = "test_data/test_robustness.csv", renamed.structures = new.names)
   
   test_structure <- "Esophagus"
   test_dose = 20
